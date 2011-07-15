@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>EIP</title>
+<link rel="stylesheet" href="common/css/style.css">
+<style>
+	table {
+		margin: 2em auto 0;
+		width: 500px;
+	}
+		table tr {
+
+		}
+			table th,
+			table td {
+				border: solid #666 1px;
+				padding: 10px;
+			}
+
+				table td .eip {
+					padding: 3px 3px 3px 22px;
+					background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwgMjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNS4xIE1hY2ludG9zaCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpBRUFBMDczREE2Q0QxMUUwOUM3Q0NFMTg1NUZBQ0FFMiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpBRUFBMDczRUE2Q0QxMUUwOUM3Q0NFMTg1NUZBQ0FFMiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkFFQUEwNzNCQTZDRDExRTA5QzdDQ0UxODU1RkFDQUUyIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkFFQUEwNzNDQTZDRDExRTA5QzdDQ0UxODU1RkFDQUUyIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+N/pz1AAAAQRJREFUeNpi/P//P4OnpycDEYARiJuA+CIQrwEJbN++nYGFgXgQB8Q1QPwYiG9DDWJgIlKzKxBbQtmyQLwZiI2JNSAa5Fog5gbifiD+DzVkMTEGuAHxHCBmBuIYIFYA4m4gfgul8YaBKRCvAGIOJLFAqGvsgfgqPheoQkNaEE38N1T8KkwAmwukgXgtEMuhif8C4iQgXoosiO4CAWjg6BKjGd0ALiCeC8SOxGpGNwCUyoKwqMnHpRnZAH8gVoRGDzIoAeIZ+OIZZoAXEDsA8TIg/oikuZdQKoPFgj4QCwFxPBDvAuJ9QDydmDQOM4AXiHcD8QUgPgTEW4jNYYyg7EwJAAgwAA69MxwZNIlmAAAAAElFTkSuQmCC");
+					background-repeat: no-repeat;
+					background-position: 3px center;
+					cursor: pointer;
+				}
+				table td .eip-hover {
+					background-color: rgba(255, 251, 204, .7);
+				}
+				table td .eip-editing {
+					padding-left: 3px;
+					background: none;
+				}
+
+					table td .eip .eip-input {
+						border: solid #666 1px;
+						padding: 3px 5px;
+					}
+					table td .eip .eip-input:focus {
+						outline: none;
+					}
+
+					table td .eip .eip-buttons {
+						padding-top: .5em;
+					}
+
+						table td .eip .eip-buttons input {
+							margin-right: .5em;
+							padding: 4px 10px;
+							font-size: 11px;
+							font-weight: bold !important;
+						}
+						table td .eip .eip-buttons .eip-save {
+							border: solid #E8AC47 1px;
+							color: #444;
+							background: -webkit-gradient(linear,left top,left bottom,from(#FFFAEB),to(#e8ad4a));
+						}
+						table td .eip .eip-buttons .eip-save:hover {
+							background: -webkit-gradient(linear,left top,left bottom,from(#fffaea),to(#fad482));
+						}
+						table td .eip .eip-buttons .eip-cancel {
+							border: solid #d0d8df 1px;
+							color: #5383bc;
+							background: -webkit-gradient(linear,left top,left bottom,from(#fdfefe),to(#e9edf0));
+						}
+						table td .eip .eip-buttons .eip-cancel:hover {
+							background: -webkit-gradient(linear,left top,left bottom,from(#fbfcfd),to(#d2dae0));
+						}
+
+	.submit {
+		margin: 1em 0 0;
+		text-align: center;
+	}
+
+</style>
+<script src="common/js/jquery.js"></script>
+<script src="source/eip.js"></script>
+<script>
+	jQuery(function($) {
+		$("div.eip").eip({
+			callback: function() {
+				$("input[name=" + this.attr("data-name") + "]")
+					.val(this.attr("data-value"))
+			}
+		});
+	});
+</script>
+</head>
+<body>
+
+<p class="note"><a href="http://5509.me/log/skroll">Archive</a> | <a href="http://5509.me/">5509</a></p>
+<div class="pagebody">
+	<h1>Edit in place</h1>
+
+	<!--<p>hogehoge</p>-->
+	<table>
+		<col width=30%>
+		<col width=70%>
+		<tr>
+			<th>なまえ</th>
+			<td>
+				<div class="eip" data-name="name" data-eip="text" data-default="クリックして編集できます">sample</div>
+			</td>
+		</tr>
+		<tr>
+			<th>趣味</th>
+			<td>
+				<div class="eip" data-name="multi" data-eip="multi">sample</div>
+			</td>
+		</tr>
+		<tr>
+			<th>自己紹介</th>
+			<td>
+				<div class="eip" data-name="introduce" data-eip="textarea">自己紹介がはいるよ</div>
+			</td>
+		</tr>
+	</table>
+
+	<form class="submit">
+		<input type="hidden" name="name" value="sample">
+		<input type="hidden" name="multi" value="sample">
+		<input type="submit" value="Submit">
+	</form>
+
+</div>
+<p class="copy">Copyright &copy <a href="http://5509.me/">5509</a> Some Rights Reserved.</p>
+
+
+
+</body>
+</html>
