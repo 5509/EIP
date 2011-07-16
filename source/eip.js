@@ -1,13 +1,13 @@
 /**
  * EIP
  *
- * @version      0.1
+ * @version      0.2
  * @author       nori (norimania@gmail.com)
  * @copyright    5509 (http://5509.me/)
  * @license      The MIT License
  * @link         https://github.com/5509/skroll
  *
- * 2011-07-14 17:31
+ * 2011-07-16 15:35
  */
 ;(function($, window, document, undefined) {
 
@@ -35,33 +35,39 @@
 		this.$form = $("<form></form>");
 
 		switch ( elm.attr("data-eip") ) {
-			case "textarea":
-				this.$input = $("<textarea></textarea>", {
-					"class": "eip-input",
-					name: elm.attr("data-eip")
-				});
-				break;
-			default:
-				this.$input = $("<input>", {
-					type: "text",
-					"class": "eip-input",
-					name: elm.attr("data-eip")
-				});
-				break;
+		case "textarea":
+			this.$input = $("<textarea></textarea>", {
+				rows: elm.attr("data-rows") || 10,
+				"class": "eip-input",
+				name: elm.attr("data-eip")
+			});
+			break;
+		default:
+			this.$input = $("<input>", {
+				type: "text",
+				"class": "eip-input",
+				name: elm.attr("data-eip")
+			});
+			break;
 		}
 
-		this.$save = this.$cancel = undefined;
+		this.$buttons = this.$save = this.$cancel = undefined;
 		if ( option.buttons ) {
 			this.$save = $("<input>", {
-				type: "submit",
-				"class": "eip-save",
-				value: option.submitLabel
-			});
+					type: "submit",
+					"class": "eip-save",
+					value: option.submitLabel
+				});
 			this.$cancel = $("<input>", {
-				type: "button",
-				"class": "eip-cancel",
-				value: option.cancelLabel
-			});
+					type: "button",
+					"class": "eip-cancel",
+					value: option.cancelLabel
+				});
+			this.$buttons = $("<p class='eip-buttons'></p>")
+				.append(
+					this.$save,
+					this.$cancel
+				);
 		}
 
 		// SetUp
@@ -69,19 +75,12 @@
 	}
 	EIP.prototype = {
 		setUp: function() {
-			var _this = this;
 			this.$form
 				.append(this.$input);
 
 			if ( this.option.buttons ) {
 				this.$form
-					.append(
-						$("<p class='eip-buttons'></p>")
-							.append(
-								this.$save,
-								this.$cancel
-							)
-					);
+					.append(this.$buttons);
 			}
 
 			this.editable();
@@ -115,6 +114,7 @@
 						_this.replaceDefault(true);
 						e.stopPropagation();
 					});
+				this.$buttons.addClass("show");
 			}
 		},
 		replaceDefault: function(cancel) {
@@ -128,7 +128,11 @@
 
 			this.$form.unbind();
 			this.$input.unbind();
-			this.$cancel.unbind();
+
+			if ( this.option.buttons ) {
+				this.$cancel.unbind();
+				this.$buttons.removeClass("show");
+			}
 
 			this.$elm
 				.removeClass("eip-editing")

@@ -43,6 +43,16 @@
 
 					table td .eip .eip-buttons {
 						padding-top: .5em;
+						position: relative;
+						top: -25px;
+						opacity: 0;
+						transition: .15s ease;
+						-webkit-transition: .15s ease;
+						-moz-transition: .15s ease;
+					}
+					table td .eip .eip-buttons.show {
+						top: 0;
+						opacity: 1;
 					}
 
 						table td .eip .eip-buttons input {
@@ -112,7 +122,7 @@
 		<tr>
 			<th>自己紹介</th>
 			<td>
-				<div class="eip" data-name="introduce" data-eip="textarea">自己紹介がはいるよ</div>
+				<div class="eip" data-name="introduce" data-eip="textarea" data-rows="10">自己紹介がはいるよ</div>
 			</td>
 		</tr>
 	</table>
