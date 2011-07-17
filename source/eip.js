@@ -1,7 +1,7 @@
 /**
  * EIP
  *
- * @version      0.2
+ * @version      0.3
  * @author       nori (norimania@gmail.com)
  * @copyright    5509 (http://5509.me/)
  * @license      The MIT License
@@ -37,17 +37,33 @@
 		switch ( elm.attr("data-eip") ) {
 		case "textarea":
 			this.$input = $("<textarea></textarea>", {
-				rows: elm.attr("data-rows") || 10,
-				"class": "eip-input",
-				name: elm.attr("data-eip")
-			});
+					rows: elm.attr("data-rows") || 10,
+					"class": "eip-input",
+					name: elm.attr("data-eip")
+				});
+			break;
+		case "select":
+			this.$input = $("<select></select>", {
+					"class": "eip-input",
+					name: elm.attr("data-eip")
+				}).html(
+					(function() {
+						var _options = elm.attr("data-option").split(","),
+							_i = 0,
+							_returnOpt = "";
+						for ( ; _i < _options.length; _i++ ) {
+							_returnOpt += "<option value='" + _options[_i] + "'>" + _options[_i] + "</option>";
+						}
+						return _returnOpt;
+					}())
+				);
 			break;
 		default:
 			this.$input = $("<input>", {
-				type: "text",
-				"class": "eip-input",
-				name: elm.attr("data-eip")
-			});
+					type: "text",
+					"class": "eip-input",
+					name: elm.attr("data-eip")
+				});
 			break;
 		}
 
@@ -110,8 +126,7 @@
 			} else {
 				this.$cancel
 					.click(function(e) {
-						_this.$elm.removeClass("eip-hover");
-						_this.replaceDefault(true);
+						_this.cancel();
 						e.stopPropagation();
 					});
 				this.$buttons.addClass("show");
@@ -143,13 +158,13 @@
 		},
 		submit: function() {
 			var _opt = this.option;
-
 			this.replaceDefault();
-			
-			if ( !$.isFunction(_opt.callback) ) return false;
+			if ( !$.isFunction(_opt.callback) ) return;
 			_opt.callback.call(this.$elm);
 		},
 		cancel: function() {
+			this.$elm.removeClass("eip-hover");
+			this.replaceDefault(true);
 		},
 		editable: function() {
 			var _this = this;
