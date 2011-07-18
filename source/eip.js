@@ -110,7 +110,7 @@
 				.unbind()
 				.empty()
 				.append(this.$form);
-			
+
 			this.$input
 				.css("width", this.$elm.width() - 20)
 				.focus()

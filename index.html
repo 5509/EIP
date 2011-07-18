@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="common/css/style.css">
 <style>
 	table {
-		margin: 2em auto 0;
+		margin: 1em auto 0;
 		width: 500px;
 	}
 		table tr {
@@ -36,6 +36,7 @@
 					table td .eip .eip-input {
 						border: solid #666 1px;
 						padding: 3px 5px;
+						background-color: #fff;
 					}
 					table td .eip .eip-input:focus {
 						outline: none;
@@ -103,49 +104,53 @@
 <div class="pagebody">
 	<h1>Edit in place</h1>
 
-	<!--<p>hogehoge</p>-->
+	<p class="cap">鉛筆マークの箇所はクリックすると編集・選択できるようになります</p>
 	<table>
-		<col width=30%>
-		<col width=70%>
-		<tr>
-			<th>なまえ</th>
-			<td>
-				<div class="eip"
-					data-name="name"
-					data-eip="text"
-					data-default="クリックして編集できます"
-				>sample</div>
-			</td>
-		</tr>
-		<tr>
-			<th>趣味</th>
-			<td>
-				<div class="eip"
-					data-name="multi"
-					data-eip="multi"
-				>sample</div>
-			</td>
-		</tr>
-		<tr>
-			<th>セレクト</th>
-			<td>
-				<div class="eip"
-					data-name="select"
-					data-eip="select"
-					data-option="A,B,C,D,E,F"
+		<colgroup>
+			<col width=30%>
+			<col width=70%>
+		</colgroup>
+		<tbody>
+			<tr>
+				<th>なまえ</th>
+				<td>
+					<div class="eip"
+						data-name="name"
+						data-eip="text"
+						data-default="クリックして編集できます"
+					>sample</div>
+				</td>
+			</tr>
+			<tr>
+				<th>趣味</th>
+				<td>
+					<div class="eip"
+						data-name="multi"
+						data-eip="multi"
+					>sample</div>
+				</td>
+			</tr>
+			<tr>
+				<th>セレクト</th>
+				<td>
+					<div class="eip"
+						data-name="select"
+						data-eip="select"
+						data-option="A,B,C,D,E,F"
 				>A</div>
-			</td>
-		</tr>
-		<tr>
-			<th>自己紹介</th>
-			<td>
-				<div class="eip"
-					data-name="introduce"
-					data-eip="textarea"
-					data-rows="10"
-				>自己紹介がはいるよ</div>
-			</td>
-		</tr>
+				</td>
+			</tr>
+			<tr>
+				<th>自己紹介</th>
+				<td>
+					<div class="eip"
+						data-name="introduce"
+						data-eip="textarea"
+						data-rows="10"
+					>自己紹介がはいるよ</div>
+				</td>
+			</tr>
+		</tbody>
 	</table>
 
 	<form class="submit">
