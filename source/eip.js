@@ -9,7 +9,7 @@
  *
  * 2011-07-19 19:42
  */
-;(function($, window, document, undefined) {
+;(function($, undefined) {
 
 	$.fn.eip = function(option) {
 		return this.each(function() {
@@ -205,4 +205,4 @@
 		}
 	}
 
-}(jQuery, this, this.document));
+}(jQuery));
