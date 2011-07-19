@@ -1,13 +1,13 @@
 /**
  * EIP
  *
- * @version      0.3
+ * @version      0.4
  * @author       nori (norimania@gmail.com)
  * @copyright    5509 (http://5509.me/)
  * @license      The MIT License
  * @link         https://github.com/5509/skroll
  *
- * 2011-07-16 15:35
+ * 2011-07-19 19:42
  */
 ;(function($, window, document, undefined) {
 
@@ -30,11 +30,15 @@
 		this.eip = {
 			defaultLabel: elm.attr("data-default") || option.defaultLabel
 		};
+		this.eipType = elm.attr("data-eip");
 		this.$elm = elm
 			.attr("data-value", elm.html());
+		this.$holder = $("<div></div>", {
+				"class": "eip-holder"
+			});
 		this.$form = $("<form></form>");
 
-		switch ( elm.attr("data-eip") ) {
+		switch ( this.eipType ) {
 		case "textarea":
 			this.$input = $("<textarea></textarea>", {
 					rows: elm.attr("data-rows") || 10,
@@ -91,6 +95,8 @@
 	}
 	EIP.prototype = {
 		setUp: function() {
+			var _html = this.$elm.html();
+
 			this.$form
 				.append(this.$input);
 
@@ -98,6 +104,13 @@
 				this.$form
 					.append(this.$buttons);
 			}
+
+			this.$elm
+				.html("")
+				.append(
+					this.$holder.html(_html),
+					this.$form.css("display", "none")
+				);
 
 			this.editable();
 		},
@@ -107,9 +120,12 @@
 			this.$elm
 				.removeClass("eip-hover")
 				.addClass("eip-editing")
-				.unbind()
-				.empty()
-				.append(this.$form);
+				.unbind();
+
+			this.$holder
+				.css("display", "none");
+			this.$form
+				.css("display", "block");
 
 			this.$input
 				.css("width", this.$elm.width() - 20)
@@ -150,9 +166,12 @@
 			}
 
 			this.$elm
-				.removeClass("eip-editing")
-				.html(_val)
-				.attr("data-value", _undef ? "" : _val);
+				.removeClass("eip-editing");
+			this.$holder
+				.html(_val.replace(/\n|\r/g, "<br/>"))
+				.css("display", "block");
+			this.$form
+				.css("display", "none");
 
 			this.editable();
 		},
