@@ -166,7 +166,8 @@
 			}
 
 			this.$elm
-				.removeClass("eip-editing");
+				.removeClass("eip-editing")
+				.attr("data-value", _val);
 			this.$holder
 				.html(_val.replace(/\n|\r/g, "<br/>"))
 				.css("display", "block");
