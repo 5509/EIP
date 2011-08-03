@@ -1,25 +1,25 @@
 /**
  * EIP
  *
- * @version      0.4
+ * @version      0.41
  * @author       nori (norimania@gmail.com)
  * @copyright    5509 (http://5509.me/)
  * @license      The MIT License
  * @link         https://github.com/5509/skroll
  *
- * 2011-07-19 19:42
+ * 2011-08-03 15:12
  */
 ;(function($, undefined) {
 
 	$.fn.eip = function(option) {
+		option = $.extend({
+			defaultLabel: "Click here to edit",
+			buttons: true,
+			submitLabel: "Save",
+			cancelLabel: "Cancel",
+			callback: null
+		}, option);
 		return this.each(function() {
-			option = $.extend({
-				defaultLabel: "Click here to edit",
-				buttons: true,
-				submitLabel: "Save",
-				cancelLabel: "Cancel",
-				callback: null
-			}, option);
 			new EIP($(this), option);
 		});
 	};
