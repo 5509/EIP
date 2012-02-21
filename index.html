@@ -28,9 +28,9 @@
 <script>
 	jQuery(function($) {
 		$("div.eip").eip({
-			callback: function() {
-				$("input[name=" + this.attr("data-name") + "]")
-					.val(this.attr("data-value"))
+			onsubmit: function(name, val) {
+				$("input[name=" + name + "]")
+					.val(val)
 			}
 		});
 	});
@@ -53,7 +53,7 @@
 				<th>なまえ</th>
 				<td>
 					<div class="eip"
-						data-name="name"
+						data-eip-name="name"
 						data-eip="text"
 						data-default="クリックして編集できます"
 					>sample</div>
@@ -63,18 +63,28 @@
 				<th>趣味</th>
 				<td>
 					<div class="eip"
-						data-name="hobby"
+						data-eip-name="hobby"
 						data-eip="text"
 					>sample</div>
 				</td>
 			</tr>
 			<tr>
-				<th>セレクト</th>
+				<th>セレクト(JSON)</th>
 				<td>
 					<div class="eip"
-						data-name="select"
+						data-eip-name="json"
 						data-eip="select"
-						data-option="A,B,C,D,E,F"
+						data-eip-option="{&quot;A&quot;:&quot;data-A&quot;,&quot;B&quot;:&quot;data-B&quot;}"
+					>data-A</div>
+				</td>
+			</tr>
+			<tr>
+				<th>セレクト(Array)</th>
+				<td>
+					<div class="eip"
+						data-eip-name="array"
+						data-eip="select"
+						data-eip-option="[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;]"
 					>A</div>
 				</td>
 			</tr>
@@ -82,7 +92,7 @@
 				<th>自己紹介</th>
 				<td>
 					<div class="eip"
-						data-name="introduce"
+						data-eip-name="introduce"
 						data-eip="textarea"
 						data-rows="10"
 					>自己紹介がはいるよ</div>
@@ -94,7 +104,8 @@
 	<form class="submit">
 		<input type="hidden" name="name" value="sample">
 		<input type="hidden" name="multi" value="sample">
-		<input type="hidden" name="select" value="A">
+		<input type="hidden" name="json" value="data-A">
+		<input type="hidden" name="array" value="A">
 		<input type="hidden" name="introduce" value="自己紹介が入るよ">
 		<input type="submit" value="Submit">
 	</form>

@@ -1,13 +1,13 @@
 /**
  * EIP
  *
- * @version      0.41
+ * @version      1.0
  * @author       nori (norimania@gmail.com)
  * @copyright    5509 (http://5509.me/)
  * @license      The MIT License
  * @link         https://github.com/5509/skroll
  *
- * 2011-08-03 15:12
+ * 2012-02-22 01:22
  */
 ;(function($, undefined) {
 
@@ -17,7 +17,7 @@
 			buttons: true,
 			submitLabel: "Save",
 			cancelLabel: "Cancel",
-			callback: null
+			onsubmit: null
 		}, option);
 		return this.each(function() {
 			new EIP($(this), option);
@@ -27,12 +27,14 @@
 	// EIP
 	function EIP(elm, option) {
 		this.option = option;
-		this.eip = {
-			defaultLabel: elm.attr("data-default") || option.defaultLabel
-		};
+		this.$defaultLabel = $("<span>")
+			.addClass('eip-default')
+			.text(elm.attr("data-eip-default") || option.defaultLabel);
 		this.eipType = elm.attr("data-eip");
-		this.$elm = elm
-			.attr("data-value", elm.html());
+		if (elm.attr("data-eip-value") === undefined) {
+			elm.attr("data-eip-value", elm.html());
+		}
+		this.$elm = elm;
 		this.$holder = $("<div></div>", {
 				"class": "eip-holder"
 			});
@@ -41,22 +43,29 @@
 		switch ( this.eipType ) {
 		case "textarea":
 			this.$input = $("<textarea></textarea>", {
-					rows: elm.attr("data-rows") || 10,
+					rows: elm.attr("data-eip-rows") || 10,
 					"class": "eip-input",
-					name: elm.attr("data-eip")
+					name: elm.attr("data-eip-name")
 				});
 			break;
 		case "select":
 			this.$input = $("<select></select>", {
 					"class": "eip-input",
-					name: elm.attr("data-eip")
+					name: elm.attr("data-eip-name")
 				}).html(
 					(function() {
-						var _options = elm.attr("data-option").split(","),
+						var _options = $.parseJSON(elm.attr("data-eip-option")),
 							_i = 0,
 							_returnOpt = "";
-						for ( ; _i < _options.length; _i++ ) {
-							_returnOpt += "<option value='" + _options[_i] + "'>" + _options[_i] + "</option>";
+						if ($.isArray(_options)) {
+							for ( ; _i < _options.length; _i++ ) {
+								_returnOpt += "<option value='" + _options[_i] + "'>" + _options[_i] + "</option>";
+							}
+						}
+						else {
+							$.each(_options, function(key, val) {
+								_returnOpt += "<option value='" + key + "'>" + val + "</option>";
+							});
 						}
 						return _returnOpt;
 					}())
@@ -64,9 +73,9 @@
 			break;
 		default:
 			this.$input = $("<input>", {
-					type: "text",
+					type: this.eipType || "text",
 					"class": "eip-input",
-					name: elm.attr("data-eip")
+					name: elm.attr("data-eip-name")
 				});
 			break;
 		}
@@ -108,7 +117,7 @@
 			this.$elm
 				.html("")
 				.append(
-					this.$holder.html(_html),
+					this.$holder.html(_html.replace(/\n|\r/g, "<br/>") || this.$defaultLabel),
 					this.$form.css("display", "none")
 				);
 
@@ -116,7 +125,7 @@
 		},
 		replaceInput: function() {
 			var _this = this;
-			this.$input.val(this.$elm.attr("data-value"));
+			this.$input.val( htmlUnescape(this.$elm.attr("data-eip-value")) );
 			this.$elm
 				.removeClass("eip-hover")
 				.addClass("eip-editing")
@@ -149,12 +158,18 @@
 			}
 		},
 		replaceDefault: function(cancel) {
-			var _val = cancel ? this.$elm.attr("data-value") : this.$input.val(),
-				_undef = false;
-
-			if ( !_val || _val.length === 0 ) {
-				_val = this.eip.defaultLabel;
-				_undef = true;
+			var _val = cancel ? this.$elm.attr("data-eip-value") : htmlEscape(this.$input.val());
+			var holder;
+			if (this.eipType === "select") {
+				holder = this.$elm.find("option").filter(function() {
+					return $(this).attr("value") === _val;
+				}).text();
+			}
+			else if (!_val || _val.length === 0) {
+				holder = this.$defaultLabel
+			}
+			else {
+				holder = _val.replace(/\n|\r/g, "<br/>");
 			}
 
 			this.$form.unbind();
@@ -167,9 +182,9 @@
 
 			this.$elm
 				.removeClass("eip-editing")
-				.attr("data-value", _val);
+				.attr("data-eip-value", _val);
 			this.$holder
-				.html(_val.replace(/\n|\r/g, "<br/>"))
+				.html(holder)
 				.css("display", "block");
 			this.$form
 				.css("display", "none");
@@ -179,8 +194,8 @@
 		submit: function() {
 			var _opt = this.option;
 			this.replaceDefault();
-			if ( !$.isFunction(_opt.callback) ) return;
-			_opt.callback.call(this.$elm);
+			if ( !$.isFunction(_opt.onsubmit) ) return;
+			_opt.onsubmit.call(this, this.$input.attr('name'), this.$input.val());
 		},
 		cancel: function() {
 			this.$elm.removeClass("eip-hover");
@@ -204,5 +219,10 @@
 				});
 		}
 	}
-
+	function htmlUnescape(str) {
+		return $('<div>').html(str).text();
+	}
+	function htmlEscape(str) {
+		return $('<div>').text(str).html();
+	}
 }(jQuery));
