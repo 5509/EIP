@@ -5,7 +5,7 @@
  * @author       nori (norimania@gmail.com)
  * @copyright    5509 (http://5509.me/)
  * @license      The MIT License
- * @link         https://github.com/5509/skroll
+ * @link         https://github.com/5509/EIP
  *
  * 2012-02-22 02:03
  */
