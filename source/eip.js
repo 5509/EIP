@@ -3,6 +3,7 @@
  *
  * @version      1.2.0-beta
  * @author       nori (norimania@gmail.com)
+ * @author       hokaccha (k.hokamura@gmail.com)
  * @copyright    5509 (http://5509.me/)
  * @license      The MIT License
  * @link         https://github.com/5509/skroll
