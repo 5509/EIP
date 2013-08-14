@@ -27,58 +27,21 @@
   // EIP
   function EIP(elm, option) {
     this.option = option;
+    this.typeName = elm.attr("data-eip");
+    this.type = EIP.types[this.typeName] || EIP.types['default'];
+
     this.$defaultLabel = $("<span>")
-      .addClass('eip-default')
+      .addClass("eip-default")
       .text(elm.attr("data-eip-default") || option.defaultLabel);
-    this.eipType = elm.attr("data-eip");
-    if (elm.attr("data-eip-value") === undefined) {
-      elm.attr("data-eip-value", elm.html());
-    }
     this.$elm = elm;
     this.$holder = $("<div></div>", {
         "class": "eip-holder"
       });
-    this.$form = $("<form></form>");
+    this.$form = $("<form></form>").css("display", "none");
+    this.$input = null;
 
-    switch ( this.eipType ) {
-    case "textarea":
-      this.$input = $("<textarea></textarea>", {
-          rows: elm.attr("data-eip-rows") || 10,
-          "class": "eip-input",
-          name: elm.attr("data-eip-name")
-        });
-      break;
-    case "select":
-      this.$input = $("<select></select>", {
-          "class": "eip-input",
-          name: elm.attr("data-eip-name")
-        }).html(
-          (function() {
-            var _options = $.parseJSON(elm.attr("data-eip-option")),
-              _i = 0,
-              _returnOpt = "";
-            if ($.isArray(_options)) {
-              for ( ; _i < _options.length; _i++ ) {
-                _returnOpt += "<option value='" + _options[_i] + "'>" + _options[_i] + "</option>";
-              }
-            }
-            else {
-              $.each(_options, function(key, val) {
-                _returnOpt += "<option value='" + key + "'>" + val + "</option>";
-              });
-            }
-            return _returnOpt;
-          }())
-        );
-      elm.attr("data-eip-value", this.$input.val());
-      break;
-    default:
-      this.$input = $("<input>", {
-          type: this.eipType || "text",
-          "class": "eip-input",
-          name: elm.attr("data-eip-name")
-        });
-      break;
+    if (elm.attr("data-eip-value") === undefined) {
+      elm.attr("data-eip-value", this.type.getDefaultValue.call(this));
     }
 
     this.$buttons = this.$save = this.$cancel = undefined;
@@ -105,76 +68,46 @@
   }
   EIP.prototype = {
     setUp: function() {
-      var _html = this.$elm.html();
-
-      this.$form
-        .append(this.$input);
-
       if ( this.option.buttons ) {
-        this.$form
-          .append(this.$buttons);
+        this.$form.append(this.$buttons);
       }
 
-      this.$elm
-        .html("")
-        .append(
-          this.$holder.html(_html.replace(/\n|\r/g, "<br/>") || this.$defaultLabel),
-          this.$form.css("display", "none")
-        );
+      this.$holder.html(this.$elm.html() || this.$defaultLabel);
+      this.$elm.empty().append(this.$holder, this.$form);
 
       this.editable();
     },
     replaceInput: function() {
       var _this = this;
-      this.$input.val( htmlUnescape(this.$elm.attr("data-eip-value")) );
+
       this.$elm
         .removeClass("eip-hover")
         .addClass("eip-editing")
         .unbind();
 
-      this.$holder
-        .css("display", "none");
-      this.$form
-        .css("display", "block");
+      this.$holder.css("display", "none");
+      this.$form.css("display", "block");
 
-      this.$input
-        .css("width", this.$elm.width() - 20)
-        .focus()
-        .click(function(e) {
-          e.stopPropagation();
-        });
+      this.type.renderForm.call(this, this.$elm.attr('data-eip-value'));
 
-      if ( !this.option.buttons ) {
-        this.$input
-          .blur(function() {
-            _this.submit();
-          });
-      } else {
+      if ( this.option.buttons ) {
         this.$cancel
           .click(function(e) {
             _this.cancel();
             e.stopPropagation();
           });
-        this.$buttons.addClass("show");
+
+          // delay for buttons transition
+          setTimeout(function() {
+            _this.$buttons.addClass("show");
+          }, 0);
       }
     },
-    replaceDefault: function(cancel) {
-      var _val = cancel ? this.$elm.attr("data-eip-value") : htmlEscape(this.$input.val());
-      var holder;
-      if ( this.eipType === "select" ) {
-        holder = this.$elm.find("option").filter(function() {
-          return $(this).attr("value") === _val;
-        }).text();
-      }
-      else if ( !_val || _val.length === 0 ) {
-        holder = this.$defaultLabel
-      }
-      else {
-        holder = _val.replace(/\n|\r/g, "<br/>");
-      }
+    replaceDefault: function() {
+      var val = this.$elm.attr("data-eip-value");
 
+      this.type.renderHolder.call(this, val);
       this.$form.unbind();
-      this.$input.unbind();
 
       if ( this.option.buttons ) {
         this.$cancel.unbind();
@@ -183,9 +116,8 @@
 
       this.$elm
         .removeClass("eip-editing")
-        .attr("data-eip-value", _val);
+        .attr("data-eip-value", val);
       this.$holder
-        .html(holder)
         .css("display", "block");
       this.$form
         .css("display", "none");
@@ -193,14 +125,19 @@
       this.editable();
     },
     submit: function() {
-      var _opt = this.option;
+      var val = this.type.getInputValue.call(this);
+      var name = this.$input.attr('name');
+
+      this.$elm.attr('data-eip-value', val);
       this.replaceDefault();
-      if ( !$.isFunction(_opt.onsubmit) ) return;
-      _opt.onsubmit.call(this, this.$input.attr('name'), this.$input.val());
+
+      if ( $.isFunction(this.option.onsubmit) ) {
+        this.option.onsubmit.call(this, name, val);
+      }
     },
     cancel: function() {
       this.$elm.removeClass("eip-hover");
-      this.replaceDefault(true);
+      this.replaceDefault();
     },
     editable: function() {
       var _this = this;
@@ -219,11 +156,148 @@
           _this.replaceInput();
         });
     }
-  }
+  };
+
+  EIP.types = {};
+
+  EIP.addType = function(typeName, funcs) {
+    EIP.types[typeName] = $.extend({
+      getDefaultValue: function() {
+        return this.$elm.html();
+      },
+      getInputValue: function() {
+        return this.$input.val();
+      }
+    }, funcs);
+  };
+
+  EIP.addType('default', {
+    renderHolder: function(val) {
+      var html = val ? htmlEscape(val) : this.$defaultLabel;
+      this.$holder.html(html);
+    },
+    renderForm: function(val) {
+      var _this = this;
+
+      if (!this.$input) {
+        this.$input = $("<input>")
+          .attr({
+            type: this.typeName || 'text',
+            "class": "eip-input",
+            name: this.$elm.attr("data-eip-name")
+          })
+          .click(function(e) {
+            e.stopPropagation();
+          })
+          .css("width", this.$elm.width() - 20);
+
+        this.$form.prepend(this.$input);
+
+        if ( !this.option.buttons ) {
+          this.$form.delegate('input', 'blur', function() { _this.submit(); });
+        }
+      }
+
+      this.$input.val( htmlUnescape(val) ).focus();
+    }
+  });
+
+  EIP.addType('textarea', {
+    renderHolder: function(val) {
+      var html = val.replace(/\n|\r/g, "<br/>") || this.$defaultLabel;
+      this.$holder.html(html);
+    },
+    renderForm: function(val) {
+      var _this = this;
+
+      if (!this.$input) {
+        this.$input = $("<textarea>")
+          .attr({
+            rows: this.$elm.attr("data-eip-rows") || 10,
+            "class": "eip-input",
+            name: this.$elm.attr("data-eip-name")
+          })
+          .click(function(e) {
+            e.stopPropagation();
+          })
+          .css("width", this.$elm.width() - 20);
+
+        this.$form.prepend(this.$input);
+
+        if ( !this.option.buttons ) {
+          this.$form.delegate('textarea', 'blur', function() { _this.submit(); });
+        }
+      }
+
+      this.$input.val( htmlUnescape(val) ).focus();
+    }
+  });
+
+  EIP.addType('select', {
+    getDefaultValue: function() {
+      var html = this.$elm.html();
+      var options = $.parseJSON(this.$elm.attr('data-eip-option'));
+      var result = '';
+      var isArray = $.isArray(options);
+      $.each(options, function(key, val) {
+        if (val === html) {
+          result = isArray ? val : key;
+          return false;
+        }
+      });
+
+      return result;
+    },
+    renderHolder: function(val) {
+      var html = this.$elm.find("option").filter(function() {
+        return $(this).attr("value") === val;
+      }).text() || this.$defaultLabel;
+
+      this.$holder.html(html);
+    },
+    renderForm: function(val) {
+      var _this = this;
+      var optionsHtml = createOptionsHtml(this.$elm.attr("data-eip-option"));
+
+      if (!this.$input) {
+        this.$input = $("<select>")
+          .attr({
+            "class": "eip-input",
+            name: this.$elm.attr("data-eip-name")
+          })
+          .html(optionsHtml);
+
+        this.$form.prepend(this.$input);
+
+        if ( !this.option.buttons ) {
+          this.$form.delegate('select', 'blur', function() { _this.submit(); });
+        }
+      }
+    }
+  });
+
   function htmlUnescape(str) {
     return $('<div>').html(str).text();
   }
   function htmlEscape(str) {
     return $('<div>').text(str).html();
   }
+  function createOptionsHtml(datas) {
+    var _options = $.parseJSON(datas),
+      _i = 0,
+      _returnOpt = "";
+    if ($.isArray(_options)) {
+      for ( ; _i < _options.length; _i++ ) {
+        _returnOpt += "<option value='" + _options[_i] + "'>" + _options[_i] + "</option>";
+      }
+    }
+    else {
+      $.each(_options, function(key, val) {
+        _returnOpt += "<option value='" + key + "'>" + val + "</option>";
+      });
+    }
+    return _returnOpt;
+  }
+
+  window.EIP = EIP;
 }(jQuery));
