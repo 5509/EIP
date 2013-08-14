@@ -1,7 +1,7 @@
 /**
  * EIP
  *
- * @version      1.1
+ * @version      1.2.0-beta
  * @author       nori (norimania@gmail.com)
  * @copyright    5509 (http://5509.me/)
  * @license      The MIT License
