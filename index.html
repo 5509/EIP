@@ -17,6 +17,14 @@
 				padding: 10px;
 			}
 
+	.favFood ul {
+		list-style: circle;
+		margin-left: 18px;
+	}
+		.favFood ul li {
+			margin: 5px 0;
+		}
+
 	.submit {
 		margin: 1em 0 0;
 		text-align: center;
@@ -26,11 +34,61 @@
 <script src="common/js/jquery.js"></script>
 <script src="source/eip.js"></script>
 <script>
+	EIP.addType('list', {
+		getDefaultValue: function() {
+			var list = this.$elm.find('ul li').map(function() {
+				return $(this).text();
+			}).toArray();
+
+			return JSON.stringify(list);
+		},
+		getInputValue: function() {
+			var list = this.$input.find('input[type="text"]').map(function() {
+				return $(this).val();
+			}).toArray();
+
+			return JSON.stringify(list);
+		},
+		renderHolder: function(val) {
+			var arr = JSON.parse(val);
+			var $ul, $el, html;
+
+			if (arr.length) {
+				$ul = $('<ul>');
+				$el = $('<div>').append($ul);
+				arr.forEach(function(item) {
+					var $li = $('<li>').text(item);
+					$ul.append($li);
+				});
+				html = $el.html();
+			}
+			else {
+				html = this.$defaultLabel;
+			}
+
+			this.$holder.html(html);
+		},
+		renderForm: function(val) {
+			if (!this.$input) {
+				this.$input = $('<div>');
+				this.$form.prepend(this.$input);
+			}
+
+			var arr = JSON.parse(val);
+			var $input = this.$input.empty();
+			arr.forEach(function(item) {
+				var $i = $('<input type="text">').val(item);
+				var $div = $('<div>').append($i);
+				$input.append($div);
+			});
+		}
+	});
+
 	jQuery(function($) {
 		$("div.eip").eip({
 			onsubmit: function(name, val) {
-				$("input[name=" + name + "]")
-					.val(val)
+				console.log(name, val);
+				$("input[name=" + name + "]").val(val);
 			}
 		});
 	});
@@ -55,7 +113,7 @@
 					<div class="eip"
 						data-eip-name="name"
 						data-eip="text"
-						data-default="クリックして編集できます"
+						data-eip-default="クリックして編集できます"
 					>sample</div>
 				</td>
 			</tr>
@@ -97,6 +155,19 @@
 						data-eip-rows="10"
 					>自己紹介がはいるよ</div>
 				</td>
+			</tr>
+			<tr>
+				<th>好きなもの</th>
+				<td class="favFood">
+					<div class="eip"
+						data-eip-name="favfood"
+						data-eip="list"
+						>
+						<ul>
+							<li>ラーメン</li>
+							<li>うどん</li>
+						</ul>
+					</div>
 			</tr>
 		</tbody>
 	</table>
