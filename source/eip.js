@@ -15,7 +15,6 @@
   $.fn.eip = function(option) {
     option = $.extend({
       defaultLabel: "Click here to edit",
-      buttons: true,
       submitLabel: "Save",
       cancelLabel: "Cancel",
       onsubmit: null
@@ -45,37 +44,30 @@
       elm.attr("data-eip-value", this.type.getDefaultValue.call(this));
     }
 
-    this.$buttons = this.$save = this.$cancel = undefined;
-    if ( option.buttons ) {
-      this.$save = $("<input>", {
-          type: "submit",
-          "class": "eip-save",
-          value: option.submitLabel
-        });
-      this.$cancel = $("<input>", {
-          type: "button",
-          "class": "eip-cancel",
-          value: option.cancelLabel
-        });
-      this.$buttons = $("<p class='eip-buttons'></p>")
-        .append(
-          this.$save,
-          this.$cancel
-        );
-    }
+    this.$save = $("<input>", {
+        type: "submit",
+        "class": "eip-save",
+        value: option.submitLabel
+      });
+    this.$cancel = $("<input>", {
+        type: "button",
+        "class": "eip-cancel",
+        value: option.cancelLabel
+      });
+    this.$buttons = $("<p class='eip-buttons'></p>")
+      .append(
+        this.$save,
+        this.$cancel
+      );
 
     // SetUp
     this.setUp();
   }
   EIP.prototype = {
     setUp: function() {
-      if ( this.option.buttons ) {
-        this.$form.append(this.$buttons);
-      }
-
+      this.$form.append(this.$buttons);
       this.$holder.html(this.$elm.html() || this.$defaultLabel);
       this.$elm.empty().append(this.$holder, this.$form);
-
       this.editable();
     },
     replaceInput: function() {
@@ -91,18 +83,16 @@
 
       this.type.renderForm.call(this, this.$elm.attr('data-eip-value'));
 
-      if ( this.option.buttons ) {
-        this.$cancel
-          .click(function(e) {
-            _this.cancel();
-            e.stopPropagation();
-          });
+      this.$cancel
+        .click(function(e) {
+          _this.cancel();
+          e.stopPropagation();
+        });
 
-          // delay for buttons transition
-          setTimeout(function() {
-            _this.$buttons.addClass("show");
-          }, 0);
-      }
+      // delay for buttons transition
+      setTimeout(function() {
+        _this.$buttons.addClass("show");
+      }, 0);
     },
     replaceDefault: function() {
       var val = this.$elm.attr("data-eip-value");
@@ -110,10 +100,8 @@
       this.type.renderHolder.call(this, val);
       this.$form.unbind();
 
-      if ( this.option.buttons ) {
-        this.$cancel.unbind();
-        this.$buttons.removeClass("show");
-      }
+      this.$cancel.unbind();
+      this.$buttons.removeClass("show");
 
       this.$elm
         .removeClass("eip-editing")
@@ -193,10 +181,6 @@
           .css("width", this.$elm.width() - 20);
 
         this.$form.prepend(this.$input);
-
-        if ( !this.option.buttons ) {
-          this.$form.delegate('input', 'blur', function() { _this.submit(); });
-        }
       }
 
       this.$input.val( htmlUnescape(val) ).focus();
@@ -224,10 +208,6 @@
           .css("width", this.$elm.width() - 20);
 
         this.$form.prepend(this.$input);
-
-        if ( !this.option.buttons ) {
-          this.$form.delegate('textarea', 'blur', function() { _this.submit(); });
-        }
       }
 
       this.$input.val( htmlUnescape(val) ).focus();
@@ -269,10 +249,6 @@
           .html(optionsHtml);
 
         this.$form.prepend(this.$input);
-
-        if ( !this.option.buttons ) {
-          this.$form.delegate('select', 'blur', function() { _this.submit(); });
-        }
       }
     }
   });
