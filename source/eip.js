@@ -166,14 +166,14 @@
         return this.$elm.html();
       },
       getInputValue: function() {
-        return htmlEscape(this.$input.val());
+        return this.$input.val();
       }
     }, funcs);
   };
 
   EIP.addType('default', {
     renderHolder: function(val) {
-      var html = val.replace(/\n|\r/g, "<br/>") || this.$defaultLabel;
+      var html = val ? htmlEscape(val) : this.$defaultLabel;
       this.$holder.html(html);
     },
     renderForm: function(val) {
