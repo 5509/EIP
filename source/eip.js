@@ -15,8 +15,7 @@
     option = $.extend({
       defaultLabel: 'Click here to edit',
       submitLabel: 'Save',
-      cancelLabel: 'Cancel',
-      onsubmit: null
+      cancelLabel: 'Cancel'
     }, option);
 
     return this.each(function() {
@@ -113,14 +112,11 @@
     },
     submit: function() {
       var val = this.type.getFormValue.call(this);
-      var name = this.$el.attr('data-eip-name');
 
       this.$el.attr('data-eip-value', val);
       this.replaceToHolder();
 
-      if ( $.isFunction(this.option.onsubmit) ) {
-        this.option.onsubmit.call(this, name, val);
-      }
+      this.$el.trigger('eip:submit', this);
     },
     cancel: function() {
       this.replaceToHolder();

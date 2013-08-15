@@ -92,11 +92,9 @@
 	});
 
 	jQuery(function($) {
-		$("div.eip").eip({
-			onsubmit: function(name, val) {
-				console.log(name, val);
-				$("input[name=" + name + "]").val(val);
-			}
+		$("div.eip").eip().bind('eip:submit', function(ev, eip) {
+			var $el = $(this);
+			console.log($el.attr('data-eip-name'), $el.attr('data-eip-value'));
 		});
 	});
 </script>
