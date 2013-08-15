@@ -43,7 +43,7 @@
       .addClass('eip-default')
       .text(this.$el.attr('data-eip-default') || option.defaultLabel);
     this.$holder = $('<div>').addClass('eip-holder');
-    this.$form = $('<form>').hide();
+    this.$form = $('<form>').addClass('eip-form').hide();
 
     if (this.$el.attr('data-eip-value') === undefined) {
       this.$el.attr('data-eip-value', this.type.getDefaultValue.call(this));
@@ -69,26 +69,12 @@
     });
 
     this.$cancel.click(function(e) {
-      e.stopPropagation();
       self.cancel();
     });
 
-    this.$el
-      .click(function() {
-        if (self.isHolderMode()) {
-          self.replaceToForm();
-        }
-      })
-      .mouseenter(function() {
-        if (self.isHolderMode()) {
-          self.$el.addClass('eip-hover');
-        }
-      })
-      .mouseleave(function() {
-        if (self.isHolderMode()) {
-          self.$el.removeClass('eip-hover');
-        }
-      });
+    this.$holder.click(function() {
+      self.replaceToForm();
+    });
   }
   EIP.prototype = {
     replaceToForm: function() {
@@ -96,7 +82,7 @@
 
       this.currentMode = EIP.MODE.FORM;
 
-      this.$el.removeClass('eip-hover').addClass('eip-editing');
+      this.$el.addClass('eip-editing');
       this.$holder.css('display', 'none');
       this.$form.css('display', 'block');
       this.type.renderForm.call(this, this.$el.attr('data-eip-value'));
@@ -129,7 +115,6 @@
       }
     },
     cancel: function() {
-      this.$el.removeClass('eip-hover');
       this.replaceToHolder();
     },
     isHolderMode: function() {
