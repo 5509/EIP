@@ -149,8 +149,7 @@
           .attr({
             type: this.typeName || 'text',
             name: this.$el.attr('data-eip-name')
-          })
-          .css('width', this.$el.width() - 20);
+          });
 
         this.$form.prepend(this.$input);
       }
@@ -166,10 +165,7 @@
     },
     renderForm: function(val) {
       if (!this.$input) {
-        this.$input = $('<textarea>')
-          .attr('name', this.$el.attr('data-eip-name'))
-          .css('width', this.$el.width() - 20);
-
+        this.$input = $('<textarea>').attr('name', this.$el.attr('data-eip-name'));
         this.$form.prepend(this.$input);
       }
 
