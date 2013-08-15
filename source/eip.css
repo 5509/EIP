@@ -15,12 +15,14 @@
 	padding: 3px;
 }
 
-.eip .eip-input {
+.eip input[type="text"],
+.eip textarea {
 	border: solid #666 1px;
 	padding: 3px 5px;
 	background-color: #fff;
 }
-.eip .eip-input:focus {
+.eip input[type="text"]:focus,
+.eip textarea:focus {
 	outline: none;
 }
 

@@ -43,7 +43,7 @@
       .addClass('eip-default')
       .text(this.$el.attr('data-eip-default') || option.defaultLabel);
     this.$holder = $('<div>').addClass('eip-holder');
-    this.$form = $('<form>').addClass('eip-form').hide();
+    this.$form = $('<form>').hide();
 
     if (this.$el.attr('data-eip-value') === undefined) {
       this.$el.attr('data-eip-value', this.type.getDefaultValue.call(this));
@@ -146,7 +146,6 @@
     renderForm: function(val) {
       if (!this.$input) {
         this.$input = $('<input>')
-          .addClass('eip-input')
           .attr({
             type: this.typeName || 'text',
             name: this.$el.attr('data-eip-name')
@@ -168,8 +167,7 @@
     renderForm: function(val) {
       if (!this.$input) {
         this.$input = $('<textarea>')
-          .addClass('eip-input')
-          .attr('name', $el.attr('data-eip-name'))
+          .attr('name', this.$el.attr('data-eip-name'))
           .css('width', this.$el.width() - 20);
 
         this.$form.prepend(this.$input);
@@ -214,7 +212,6 @@
         }).join('') || this.$defaultLabel;
 
         this.$input = $('<select>')
-          .addClass('eip-input')
           .attr('name', this.$el.attr('data-eip-name'))
           .html(html);
 
