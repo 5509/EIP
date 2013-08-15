@@ -23,7 +23,7 @@ describe('types default', function() {
     });
 
     it('should has default text', function() {
-      var $default = $eip.find('.eip-holder > .eip-default');
+      var $default = $eip.find('.eip-holder > .eip-placeholder');
       expect($default.length).to.be(1);
       expect($default.is(':visible')).to.be(true);
       expect($default.text()).to.be('Click here to edit');
@@ -53,7 +53,7 @@ describe('types default', function() {
 
     context('when submit', function() {
       beforeEach(function() {
-        $eip.click();
+        $eip.find('.eip-holder').click();
         $eip.find('input[name="foo"]').val('value!');
         $eip.find('form').submit();
       });
