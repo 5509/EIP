@@ -33,7 +33,7 @@
 
     this.$el = $el;
     this.option = option;
-    this.typeName = this.$el.attr('data-eip');
+    this.typeName = this.$el.attr('data-eip-type');
     this.type = EIP.types[this.typeName] || EIP.types['default'];
     this.currentMode = EIP.MODE.HOLDER;
     this.$defaultLabel = $('<span>')
