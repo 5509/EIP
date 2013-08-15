@@ -13,7 +13,7 @@
 
   $.fn.eip = function(option) {
     option = $.extend({
-      defaultLabel: 'Click here to edit',
+      placeholder: 'Click here to edit',
       submitLabel: 'Save',
       cancelLabel: 'Cancel'
     }, option);
@@ -36,9 +36,9 @@
     this.typeName = this.$el.attr('data-eip-type');
     this.type = EIP.types[this.typeName] || EIP.types['default'];
     this.currentMode = EIP.MODE.HOLDER;
-    this.$defaultLabel = $('<span>')
-      .addClass('eip-default')
-      .text(this.$el.attr('data-eip-default') || this.option.defaultLabel);
+    this.$placeholder = $('<span>')
+      .addClass('eip-placeholder')
+      .text(this.$el.attr('data-eip-placeholder') || this.option.placeholder);
 
     if (this.$el.attr('data-eip-value') === undefined) {
       this.$el.attr('data-eip-value', this.type.getDefaultValue.call(this));
@@ -56,7 +56,7 @@
       var self = this;
 
       this.$holder = $('<div>').addClass('eip-holder');
-      this.$holder.html(this.$el.html() || this.$defaultLabel);
+      this.$holder.html(this.$el.html() || this.$placeholder);
 
       this.$holder.click(function() {
         self.replaceToForm();
@@ -146,7 +146,7 @@
 
   EIP.addType('default', {
     renderHolder: function(val) {
-      var html = val ? htmlEscape(val) : this.$defaultLabel;
+      var html = val ? htmlEscape(val) : this.$placeholder;
       this.$holder.html(html);
     },
     renderForm: function(val) {
@@ -166,7 +166,7 @@
 
   EIP.addType('textarea', {
     renderHolder: function(val) {
-      var html = val.replace(/\n|\r/g, '<br/>') || this.$defaultLabel;
+      var html = val.replace(/\n|\r/g, '<br/>') || this.$placeholder;
       this.$holder.html(html);
     },
     renderForm: function(val) {
@@ -198,7 +198,7 @@
     renderHolder: function(val) {
       var html = this.$el.find('option').filter(function() {
         return $(this).attr('value') === val;
-      }).text() || this.$defaultLabel;
+      }).text() || this.$placeholder;
 
       this.$holder.html(html);
     },
@@ -211,7 +211,7 @@
             key = val;
           }
           return '<option value="' + key + '">' + val + '</option>';
-        }).join('') || this.$defaultLabel;
+        }).join('') || this.$placeholder;
 
         this.$input = $('<select>')
           .attr('name', this.$el.attr('data-eip-name'))
