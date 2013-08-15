@@ -8,7 +8,6 @@
  * @license      The MIT License
  * @link         https://github.com/5509/skroll
  *
- * 2012-02-22 02:03
  */
 ;(function($, undefined) {
 
