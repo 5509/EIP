@@ -36,9 +36,6 @@
     this.typeName = this.data('type');
     this.type = EIP.types[this.typeName] || EIP.types['default'];
     this.currentState = STATE.VIEW;
-    this.$placeholder = $('<span>')
-      .addClass('eip-placeholder')
-      .text(this.data('placeholder') || this.option.placeholder);
 
     if (this.data('value') === undefined) {
       this.$el.attr('data-eip-value', this.type.getDefaultValue.call(this));
@@ -55,6 +52,9 @@
     _initHolder: function() {
       var self = this;
 
+      var ph = this.data('placeholder') || this.option.placeholder;
+
+      this.$placeholder = $('<span>').addClass('eip-placeholder').text(ph);
       this.$holder = $('<div>').addClass('eip-holder');
       this.$holder.html(this.$el.html() || this.$placeholder);
 
