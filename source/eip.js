@@ -23,7 +23,7 @@
     });
   };
 
-  EIP.MODE = {
+  var MODE = {
     HOLDER: 1,
     FORM: 2
   };
@@ -35,7 +35,7 @@
     this.option = option;
     this.typeName = this.$el.attr('data-eip-type');
     this.type = EIP.types[this.typeName] || EIP.types['default'];
-    this.currentMode = EIP.MODE.HOLDER;
+    this.currentMode = MODE.HOLDER;
     this.$placeholder = $('<span>')
       .addClass('eip-placeholder')
       .text(this.$el.attr('data-eip-placeholder') || this.option.placeholder);
@@ -89,8 +89,7 @@
     replaceToForm: function() {
       var self = this;
 
-      this.currentMode = EIP.MODE.FORM;
-
+      this.setFormMode();
       this.$el.addClass('eip-editing');
       this.$holder.css('display', 'none');
       this.$form.css('display', 'block');
@@ -104,8 +103,7 @@
     replaceToHolder: function() {
       var val = this.$el.attr('data-eip-value');
 
-      this.currentMode = EIP.MODE.HOLDER;
-
+      this.setHolderMode();
       this.type.renderHolder.call(this, val);
       this.$buttons.removeClass('show');
       this.$el.removeClass('eip-editing').attr('data-eip-value', val);
@@ -123,11 +121,17 @@
     cancel: function() {
       this.replaceToHolder();
     },
+    setHolderMode: function() {
+      this.currentMode = MODE.HOLDER;
+    },
+    setFormMode: function() {
+      this.currentMode = MODE.FORM;
+    },
     isHolderMode: function() {
-      return this.currentMode === EIP.MODE.HOLDER;
+      return this.currentMode === MODE.HOLDER;
     },
     isFormMode: function() {
-      return this.currentMode === EIP.MODE.FORM;
+      return this.currentMode === MODE.FORM;
     }
   };
 
