@@ -90,33 +90,31 @@
       var self = this;
 
       this.changeStateToEdit();
-      this.$el.addClass('eip-editing');
-      this.$holder.css('display', 'none');
-      this.$form.css('display', 'block');
-      this.type.renderForm.call(this, this.$el.attr('data-eip-value'));
+      this.$holder.hide();
+      this.$form.show();
 
       // delay for buttons transition
       setTimeout(function() {
         self.$buttons.addClass('eip-buttons-show');
       }, 0);
+
+      this.type.renderForm.call(this, this.$el.attr('data-eip-value'));
     },
     replaceToHolder: function() {
       var val = this.$el.attr('data-eip-value');
 
       this.changeStateToView();
-      this.type.renderHolder.call(this, val);
-      this.$buttons.removeClass('eip-buttons-show');
-      this.$el.removeClass('eip-editing').attr('data-eip-value', val);
-      this.$holder.show();
       this.$form.hide();
+      this.$holder.show();
+      this.$buttons.removeClass('eip-buttons-show');
+      this.type.renderHolder.call(this, val);
     },
     submit: function() {
       var val = this.type.getFormValue.call(this);
 
       this.$el.attr('data-eip-value', val);
-      this.replaceToHolder();
-
       this.$el.trigger('eip:submit');
+      this.replaceToHolder();
     },
     cancel: function() {
       this.replaceToHolder();
