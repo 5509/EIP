@@ -36,13 +36,13 @@
 <script>
 	EIP.addType('list', {
 		getDefaultValue: function() {
-			var list = this.$elm.find('ul li').map(function() {
+			var list = this.$el.find('ul li').map(function() {
 				return $(this).text();
 			}).toArray();
 
 			return JSON.stringify(list);
 		},
-		getInputValue: function() {
+		getFormValue: function() {
 			var list = this.$input.find('input[type="text"]').map(function() {
 				return $(this).val();
 			}).toArray();
