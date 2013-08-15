@@ -48,6 +48,8 @@
     this._initForm();
 
     this.$el.empty().append(this.$holder, this.$form);
+
+    this.$el.data('eip', this);
   }
   EIP.prototype = {
     _initHolder: function() {
@@ -116,7 +118,7 @@
       this.$el.attr('data-eip-value', val);
       this.replaceToHolder();
 
-      this.$el.trigger('eip:submit', this);
+      this.$el.trigger('eip:submit');
     },
     cancel: function() {
       this.replaceToHolder();
