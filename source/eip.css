@@ -15,56 +15,56 @@
 	padding: 3px;
 }
 
-	.eip .eip-input {
-		border: solid #666 1px;
-		padding: 3px 5px;
-		background-color: #fff;
-	}
-	.eip .eip-input:focus {
-		outline: none;
-	}
+.eip .eip-input {
+	border: solid #666 1px;
+	padding: 3px 5px;
+	background-color: #fff;
+}
+.eip .eip-input:focus {
+	outline: none;
+}
 
-	.eip .eip-buttons {
-		padding-top: .5em;
-		position: relative;
-		top: -25px;
-		opacity: 0;
-		transition: .15s ease;
-		-webkit-transition: .15s ease;
-		-moz-transition: .15s ease;
-	}
-	.eip .eip-buttons.show {
-		top: 0;
-		opacity: 1;
-	}
+.eip .eip-buttons {
+	padding-top: .5em;
+	position: relative;
+	top: -25px;
+	opacity: 0;
+	transition: .15s ease;
+	-webkit-transition: .15s ease;
+	-moz-transition: .15s ease;
+}
+.eip .eip-buttons.show {
+	top: 0;
+	opacity: 1;
+}
 
-		.eip .eip-buttons input {
-			margin-right: .5em;
-			padding: 4px 10px;
-			font-size: 11px;
-			font-weight: bold !important;
-		}
-		.eip .eip-buttons .eip-save {
-			border: solid #E8AC47 1px;
-			color: #444;
-			background: -webkit-gradient(linear, left top, left bottom, from(#FFFAEB), to(#e8ad4a));
-			background: -moz-linear-gradient(#FFFAEB 0, #e8ad4a 100%);
-			background: -o-linear-gradient(#FFFAEB 0, #e8ad4a 100%);
-		}
-		.eip .eip-buttons .eip-save:hover {
-			background: -webkit-gradient(linear, left top, left bottom, from(#fffaea), to(#fad482));
-			background: -moz-linear-gradient(#fffaea 0, #fad482 100%);
-			background: -o-linear-gradient(#fffaea 0, #fad482 100%);
-		}
-		.eip .eip-buttons .eip-cancel {
-			border: solid #d0d8df 1px;
-			color: #5383bc;
-			background: -webkit-gradient(linear, left top, left bottom, from(#fdfefe), to(#e9edf0));
-			background: -moz-linear-gradient(#fdfefe 0, #e9edf0 100%);
-			background: -o-linear-gradient(#fdfefe 0, #e9edf0 100%);
-		}
-		.eip .eip-buttons .eip-cancel:hover {
-			background: -webkit-gradient(linear, left top, left bottom, from(#fbfcfd), to(#d2dae0));
-			background: -moz-linear-gradient(#fbfcfd 0, #d2dae0 100%);
-			background: -o-linear-gradient(#fbfcfd 0, #d2dae0 100%);
-		}
+	.eip .eip-buttons input {
+		margin-right: .5em;
+		padding: 4px 10px;
+		font-size: 11px;
+		font-weight: bold !important;
+	}
+	.eip .eip-buttons .eip-save {
+		border: solid #E8AC47 1px;
+		color: #444;
+		background: -webkit-gradient(linear, left top, left bottom, from(#FFFAEB), to(#e8ad4a));
+		background: -moz-linear-gradient(#FFFAEB 0, #e8ad4a 100%);
+		background: -o-linear-gradient(#FFFAEB 0, #e8ad4a 100%);
+	}
+	.eip .eip-buttons .eip-save:hover {
+		background: -webkit-gradient(linear, left top, left bottom, from(#fffaea), to(#fad482));
+		background: -moz-linear-gradient(#fffaea 0, #fad482 100%);
+		background: -o-linear-gradient(#fffaea 0, #fad482 100%);
+	}
+	.eip .eip-buttons .eip-cancel {
+		border: solid #d0d8df 1px;
+		color: #5383bc;
+		background: -webkit-gradient(linear, left top, left bottom, from(#fdfefe), to(#e9edf0));
+		background: -moz-linear-gradient(#fdfefe 0, #e9edf0 100%);
+		background: -o-linear-gradient(#fdfefe 0, #e9edf0 100%);
+	}
+	.eip .eip-buttons .eip-cancel:hover {
+		background: -webkit-gradient(linear, left top, left bottom, from(#fbfcfd), to(#d2dae0));
+		background: -moz-linear-gradient(#fbfcfd 0, #d2dae0 100%);
+		background: -o-linear-gradient(#fbfcfd 0, #d2dae0 100%);
+	}
