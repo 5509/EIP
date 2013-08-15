@@ -29,9 +29,9 @@ describe('types default', function() {
       expect($default.text()).to.be('Click here to edit');
     });
 
-    context('when clicked', function() {
+    context('when clicked $holder', function() {
       beforeEach(function() {
-        $eip.click();
+        $eip.find('.eip-holder').click();
       });
 
       it('form should visible', function() {
