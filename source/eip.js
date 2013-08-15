@@ -97,7 +97,7 @@
 
       // delay for buttons transition
       setTimeout(function() {
-        self.$buttons.addClass('show');
+        self.$buttons.addClass('eip-buttons-show');
       }, 0);
     },
     replaceToHolder: function() {
@@ -105,7 +105,7 @@
 
       this.changeStateToView();
       this.type.renderHolder.call(this, val);
-      this.$buttons.removeClass('show');
+      this.$buttons.removeClass('eip-buttons-show');
       this.$el.removeClass('eip-editing').attr('data-eip-value', val);
       this.$holder.show();
       this.$form.hide();
