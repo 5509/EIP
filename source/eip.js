@@ -235,6 +235,8 @@
 
         this.$form.prepend(this.$input);
       }
+
+      this.$input.val(val);
     }
   });
 
