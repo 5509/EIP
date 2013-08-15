@@ -46,6 +46,7 @@
 
     this._initHolder();
     this._initForm();
+    this.type.init.call(this);
 
     this.$el.empty().append(this.$holder, this.$form);
     this.$el.data('eip', this);
@@ -149,41 +150,55 @@
   };
 
   EIP.addType('default', {
+    init: function() {
+      this.$input = $('<input>')
+        .attr({
+          type: this.typeName || 'text',
+          name: this.data('name')
+        });
+
+      this.$form.prepend(this.$input);
+    },
     renderHolder: function(val) {
       var html = val ? htmlEscape(val) : this.$placeholder;
       this.$holder.html(html);
     },
     renderForm: function(val) {
-      if (!this.$input) {
-        this.$input = $('<input>')
-          .attr({
-            type: this.typeName || 'text',
-            name: this.data('name')
-          });
-
-        this.$form.prepend(this.$input);
-      }
-
       this.$input.val( htmlUnescape(val) ).focus();
     }
   });
 
   EIP.addType('textarea', {
+    init: function() {
+      this.$input = $('<textarea>').attr('name', this.data('name'));
+      this.$form.prepend(this.$input);
+    },
     renderHolder: function(val) {
       var html = val.replace(/\n|\r/g, '<br/>') || this.$placeholder;
       this.$holder.html(html);
     },
     renderForm: function(val) {
-      if (!this.$input) {
-        this.$input = $('<textarea>').attr('name', this.data('name'));
-        this.$form.prepend(this.$input);
-      }
-
       this.$input.val( htmlUnescape(val) ).focus();
     }
   });
 
   EIP.addType('select', {
+    init: function() {
+      var options = $.parseJSON(this.data('option'));
+      var isArray = $.isArray(options);
+      var html = $.map(options, function(val, key) {
+        if (isArray) {
+          key = val;
+        }
+        return '<option value="' + key + '">' + val + '</option>';
+      }).join('') || this.$placeholder;
+
+      this.$input = $('<select>')
+        .attr('name', this.data('name'))
+        .html(html);
+
+      this.$form.prepend(this.$input);
+    },
     getDefaultValue: function() {
       var html = this.$el.html();
       var options = $.parseJSON(this.data('option'));
@@ -207,23 +222,6 @@
       this.$holder.html(html);
     },
     renderForm: function(val) {
-      if (!this.$input) {
-        var options = $.parseJSON(this.data('option'));
-        var isArray = $.isArray(options);
-        var html = $.map(options, function(val, key) {
-          if (isArray) {
-            key = val;
-          }
-          return '<option value="' + key + '">' + val + '</option>';
-        }).join('') || this.$placeholder;
-
-        this.$input = $('<select>')
-          .attr('name', this.data('name'))
-          .html(html);
-
-        this.$form.prepend(this.$input);
-      }
-
       this.$input.val(val);
     }
   });

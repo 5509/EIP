@@ -42,6 +42,10 @@
 <script src="source/eip.js"></script>
 <script>
 	EIP.addType('list', {
+		init: function() {
+			this.$input = $('<div>');
+			this.$form.prepend(this.$input);
+		},
 		getDefaultValue: function() {
 			var list = this.$el.find('ul li').map(function() {
 				return $(this).text();
@@ -76,11 +80,6 @@
 			this.$holder.html(html);
 		},
 		renderForm: function(val) {
-			if (!this.$input) {
-				this.$input = $('<div>');
-				this.$form.prepend(this.$input);
-			}
-
 			var arr = JSON.parse(val);
 			var $input = this.$input.empty();
 			arr.forEach(function(item) {
