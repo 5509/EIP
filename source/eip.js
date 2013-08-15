@@ -37,45 +37,54 @@
     this.typeName = this.$el.attr('data-eip');
     this.type = EIP.types[this.typeName] || EIP.types['default'];
     this.currentMode = EIP.MODE.HOLDER;
-
     this.$defaultLabel = $('<span>')
       .addClass('eip-default')
-      .text(this.$el.attr('data-eip-default') || option.defaultLabel);
-    this.$holder = $('<div>').addClass('eip-holder');
-    this.$form = $('<form>').hide();
+      .text(this.$el.attr('data-eip-default') || this.option.defaultLabel);
 
     if (this.$el.attr('data-eip-value') === undefined) {
       this.$el.attr('data-eip-value', this.type.getDefaultValue.call(this));
     }
 
-    this.$save = $('<input type="submit">')
-      .addClass('eip-save')
-      .val(option.submitLabel);
-    this.$cancel = $('<input type="button">')
-      .addClass('eip-cancel')
-      .val(option.cancelLabel);
-    this.$buttons = $('<p>')
-      .addClass('eip-buttons')
-      .append(this.$save, this.$cancel);
+    this._initHolder();
+    this._initForm();
 
-    this.$form.append(this.$buttons);
-    this.$holder.html(this.$el.html() || this.$defaultLabel);
     this.$el.empty().append(this.$holder, this.$form);
-
-    this.$form.submit(function(e) {
-      e.preventDefault();
-      self.submit();
-    });
-
-    this.$cancel.click(function(e) {
-      self.cancel();
-    });
-
-    this.$holder.click(function() {
-      self.replaceToForm();
-    });
   }
   EIP.prototype = {
+    _initHolder: function() {
+      var self = this;
+
+      this.$holder = $('<div>').addClass('eip-holder');
+      this.$holder.html(this.$el.html() || this.$defaultLabel);
+
+      this.$holder.click(function() {
+        self.replaceToForm();
+      });
+    },
+    _initForm: function() {
+      var self = this;
+
+      this.$form = $('<form>').hide();
+      this.$save = $('<input type="submit">')
+        .addClass('eip-save')
+        .val(this.option.submitLabel);
+      this.$cancel = $('<input type="button">')
+        .addClass('eip-cancel')
+        .val(this.option.cancelLabel);
+      this.$buttons = $('<div>')
+        .addClass('eip-buttons')
+        .append(this.$save, this.$cancel);
+      this.$form.append(this.$buttons);
+
+      this.$form.submit(function(e) {
+        e.preventDefault();
+        self.submit();
+      });
+
+      this.$cancel.click(function(e) {
+        self.cancel();
+      });
+    },
     replaceToForm: function() {
       var self = this;
 
