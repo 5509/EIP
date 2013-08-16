@@ -24,6 +24,26 @@
 	textarea {
 		height: 100px;
 	}
+	.favFood form .row {
+		margin: 5px 0;
+	}
+		.favFood form .row input[type="text"] {
+			width: 200px;
+		}
+		.favFood form .row button {
+			background: #b01608;
+			color: #FFF;
+			font-weight: bold;
+			border: none;
+			cursor: pointer;
+		}
+		.favFood form .row button:hover {
+			background: #f71e0b;
+		}
+	.favFood form .add {
+		padding: 3px 10px;
+		text-align: center;
+	}
 	.favFood ul {
 		list-style: circle;
 		margin-left: 18px;
@@ -31,12 +51,6 @@
 		.favFood ul li {
 			margin: 5px 0;
 		}
-
-	.submit {
-		margin: 1em 0 0;
-		text-align: center;
-	}
-
 </style>
 <script src="common/js/jquery.js"></script>
 <script src="source/eip.js"></script>
@@ -46,55 +60,65 @@
 			this.$input = $('<div>');
 			this.$form.prepend(this.$input);
 		},
-		getDefaultValue: function() {
-			var list = this.$el.find('ul li').map(function() {
-				return $(this).text();
-			}).toArray();
+		renderHolder: function() {
+			var $ul = $('<ul>');
 
-			return JSON.stringify(list);
-		},
-		getFormValue: function() {
-			var list = this.$input.find('input[type="text"]').map(function() {
-				return $(this).val();
-			}).toArray();
-
-			return JSON.stringify(list);
-		},
-		renderHolder: function(val) {
-			var arr = JSON.parse(val);
-			var $ul, $el, html;
-
-			if (arr.length) {
-				$ul = $('<ul>');
-				$el = $('<div>').append($ul);
-				arr.forEach(function(item) {
-					var $li = $('<li>').text(item);
-					$ul.append($li);
-				});
-				html = $el.html();
-			}
-			else {
-				html = this.$placeholder;
-			}
-
-			this.$holder.html(html);
-		},
-		renderForm: function(val) {
-			var arr = JSON.parse(val);
-			var $input = this.$input.empty();
-			arr.forEach(function(item) {
-				var $i = $('<input type="text">').val(item);
-				var $div = $('<div>').append($i);
-				$input.append($div);
+			this.$input.find('input[type="text"]').each(function() {
+				var $i = $(this);
+				var $li = $('<li>');
+				$li.html($i.val());
+				$ul.append($li);
 			});
-		}
+
+			this.$holder.html($ul);
+		},
+		renderForm: function() {
+			var $input = this.$input.empty();
+			var name = this.data('name');
+
+			function applyNameAttr() {
+				$input.find('input').each(function(i) {
+					$(this).attr('name', name + '[' + i + ']');
+				});
+			}
+			function _createRow(text) {
+				var $remove = $('<button>')
+					.text('x')
+					.addClass('remove')
+					.click(function(e) {
+						e.preventDefault();
+						$(this).closest('.row').remove();
+						applyNameAttr();
+					});
+				var $input = $('<input type="text">').val(text);
+
+				return $('<div>').addClass('row').append($input, $remove);
+			}
+
+			this.$holder.find('li').each(function() {
+				var $li = $(this);
+				var $row = _createRow($li.text());
+				$input.append($row);
+			});
+
+			var $add = $('<button>').text('+').addClass('add').click(function(e) {
+				e.preventDefault();
+				var $row = _createRow();
+				$input.append($row);
+				applyNameAttr();
+			});
+
+			applyNameAttr();
+			$input.after($add);
+		},
 	});
 
 	jQuery(function($) {
 		$("div.eip").eip().bind('eip:submit', function(ev) {
 			var $el = $(this);
 			var eip = $el.data('eip');
-			console.log(eip.typeName, $el.attr('data-eip-name'), $el.attr('data-eip-value'));
+			var text = decodeURIComponent(eip.$form.serialize());
+			console.log(text);
 		});
 	});
 </script>
@@ -177,6 +201,7 @@
 			</tr>
 		</tbody>
 	</table>
+	<div class="log"></div>
 </div>
 <p class="copy">Copyright &copy <a href="http://5509.me/">5509</a> Some Rights Reserved.</p>
 
