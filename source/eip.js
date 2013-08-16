@@ -173,18 +173,19 @@
 
   EIP.defineType('select', {
     init: function() {
-      var options = $.parseJSON(this.data('option'));
-      var isArray = $.isArray(options);
-      var html = $.map(options, function(val, key) {
-        if (isArray) {
-          key = val;
+      var datalist = $.parseJSON(this.data('datalist'));
+      var options = $.map(datalist, function(val) {
+        var key = val;
+        if ($.isArray(val)) {
+          key = val[0];
+          val = val[1];
         }
         return '<option value="' + key + '">' + val + '</option>';
-      }).join('') || this.$placeholder;
+      }).join('');
 
       this.$input = $('<select>')
         .attr('name', this.data('name'))
-        .html(html);
+        .html(options);
 
       this.$form.prepend(this.$input);
     },
