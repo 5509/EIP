@@ -55,7 +55,7 @@
 <script src="common/js/jquery.js"></script>
 <script src="source/eip.js"></script>
 <script>
-	EIP.addType('list', {
+	EIP.defineType('list', {
 		init: function() {
 			this.$input = $('<div>');
 			this.$form.prepend(this.$input);
@@ -182,8 +182,7 @@
 						data-eip-type="textarea"
 						data-eip-name="introduce"
 						data-eip-rows="10"
-					>自己紹介がはいるよ<br>
-&lt;strong&gt;タグがあった場合&lt;/strong&gt;は<em>どうなるかな</em></div>
+					>自己紹介がはいるよ</div>
 				</td>
 			</tr>
 			<tr>

@@ -3,8 +3,8 @@ describe('EIP', function() {
     expect(EIP).to.be.a(Function);
   });
 
-  describe('.addType()', function() {
-    beforeEach(function() { EIP.addType('foo', {}); });
+  describe('.defineType()', function() {
+    beforeEach(function() { EIP.defineType('foo', {}); });
     afterEach(function() { delete EIP.types.foo; });
 
     it('should add types', function() {

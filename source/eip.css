@@ -25,6 +25,9 @@
 .eip textarea:focus {
 	outline: none;
 }
+.eip[data-eip-type="textarea"] .eip-holder {
+	white-space: pre-wrap;
+}
 
 .eip .eip-buttons {
 	padding-top: .5em;

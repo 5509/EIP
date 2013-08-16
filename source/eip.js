@@ -130,11 +130,11 @@
 
   EIP.types = {};
 
-  EIP.addType = function(typeName, funcs) {
+  EIP.defineType = function(typeName, funcs) {
     EIP.types[typeName] = funcs;
   };
 
-  EIP.addType('default', {
+  EIP.defineType('default', {
     init: function() {
       this.$input = $('<input>')
         .attr({
@@ -155,14 +155,14 @@
     }
   });
 
-  EIP.addType('textarea', {
+  EIP.defineType('textarea', {
     init: function() {
       this.$input = $('<textarea>').attr('name', this.data('name'));
       this.$form.prepend(this.$input);
     },
     renderHolder: function() {
       var val = this.$input.val();
-      var html = val ? val.replace(/\n|\r/g, '<br/>') : this.$placeholder;
+      var html = val ? htmlEscape(val) : this.$placeholder;
       this.$holder.html(html);
     },
     renderForm: function() {
@@ -171,7 +171,7 @@
     }
   });
 
-  EIP.addType('select', {
+  EIP.defineType('select', {
     init: function() {
       var options = $.parseJSON(this.data('option'));
       var isArray = $.isArray(options);
