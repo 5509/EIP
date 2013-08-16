@@ -29,17 +29,11 @@
   };
 
   function EIP($el, option) {
-    var self = this;
-
     this.$el = $el;
     this.option = option;
     this.typeName = this.data('type');
     this.type = EIP.types[this.typeName] || EIP.types['default'];
     this.currentState = STATE.VIEW;
-
-    if (this.data('value') === undefined) {
-      this.$el.attr('data-eip-value', this.type.getDefaultValue.call(this));
-    }
 
     this._initHolder();
     this._initForm();
@@ -98,26 +92,24 @@
         self.$buttons.addClass('eip-buttons-show');
       }, 0);
 
-      this.type.renderForm.call(this, this.data('value'));
+      this.type.renderForm.call(this);
     },
-    replaceToHolder: function() {
-      var val = this.data('value');
-
+    replaceToHolder: function(cancel) {
       this.changeStateToView();
       this.$form.hide();
       this.$holder.show();
       this.$buttons.removeClass('eip-buttons-show');
-      this.type.renderHolder.call(this, val);
+
+      if (!cancel) {
+        this.type.renderHolder.call(this);
+      }
     },
     submit: function() {
-      var val = this.type.getFormValue.call(this);
-
-      this.$el.attr('data-eip-value', val);
       this.$el.trigger('eip:submit');
       this.replaceToHolder();
     },
     cancel: function() {
-      this.replaceToHolder();
+      this.replaceToHolder(true);
     },
     changeStateToEdit: function() {
       this.currentState = STATE.VIEW;
@@ -139,14 +131,7 @@
   EIP.types = {};
 
   EIP.addType = function(typeName, funcs) {
-    EIP.types[typeName] = $.extend({
-      getDefaultValue: function() {
-        return this.$el.html();
-      },
-      getFormValue: function() {
-        return this.$input.val();
-      }
-    }, funcs);
+    EIP.types[typeName] = funcs;
   };
 
   EIP.addType('default', {
@@ -159,12 +144,14 @@
 
       this.$form.prepend(this.$input);
     },
-    renderHolder: function(val) {
+    renderHolder: function() {
+      var val = this.$input.val();
       var html = val ? htmlEscape(val) : this.$placeholder;
       this.$holder.html(html);
     },
-    renderForm: function(val) {
-      this.$input.val( htmlUnescape(val) ).focus();
+    renderForm: function() {
+      var val = this.$holder.html();
+      this.$input.val(htmlUnescape(val)).focus();
     }
   });
 
@@ -173,12 +160,14 @@
       this.$input = $('<textarea>').attr('name', this.data('name'));
       this.$form.prepend(this.$input);
     },
-    renderHolder: function(val) {
-      var html = val.replace(/\n|\r/g, '<br/>') || this.$placeholder;
+    renderHolder: function() {
+      var val = this.$input.val();
+      var html = val ? val.replace(/\n|\r/g, '<br/>') : this.$placeholder;
       this.$holder.html(html);
     },
-    renderForm: function(val) {
-      this.$input.val( htmlUnescape(val) ).focus();
+    renderForm: function() {
+      var val = this.$holder.html();
+      this.$input.val(htmlUnescape(val)).focus();
     }
   });
 
@@ -199,30 +188,23 @@
 
       this.$form.prepend(this.$input);
     },
-    getDefaultValue: function() {
-      var html = this.$el.html();
-      var options = $.parseJSON(this.data('option'));
-      var result = '';
-      var isArray = $.isArray(options);
-
-      $.each(options, function(key, val) {
-        if (val === html) {
-          result = isArray ? val : key;
-          return false;
-        }
-      });
-
-      return result;
-    },
-    renderHolder: function(val) {
+    renderHolder: function() {
+      var val = this.$input.val();
       var html = this.$el.find('option').filter(function() {
         return $(this).attr('value') === val;
       }).text() || this.$placeholder;
 
       this.$holder.html(html);
     },
-    renderForm: function(val) {
-      this.$input.val(val);
+    renderForm: function() {
+      var val = this.$holder.html();
+      this.$input.find('option').each(function() {
+        var $option = $(this);
+        if ($option.html() === val) {
+          $option.attr('selected', true);
+          return false;
+        }
+      });
     }
   });
 
