@@ -56,25 +56,25 @@
 <script src="source/eip.js"></script>
 <script>
 	EIP.defineType('list')
-		.on('init', function() {
-			this.$input = $('<div>');
-			this.$form.prepend(this.$input);
+		.on('init', function(eip) {
+			eip.$input = $('<div>');
+			eip.$form.prepend(eip.$input);
 		})
-		.on('renderHolder', function() {
+		.on('renderHolder', function(eip) {
 			var $ul = $('<ul>');
 
-			this.$input.find('input[type="text"]').each(function() {
+			eip.$input.find('input[type="text"]').each(function() {
 				var $i = $(this);
 				var $li = $('<li>');
 				$li.html($i.val());
 				$ul.append($li);
 			});
 
-			this.$holder.html($ul);
+			eip.$holder.html($ul);
 		})
-		.on('renderForm', function() {
-			var $input = this.$input.empty();
-			var name = this.data('name');
+		.on('renderForm', function(eip) {
+			var $input = eip.$input.empty();
+			var name = eip.data('name');
 
 			function applyNameAttr() {
 				$input.find('input').each(function(i) {
@@ -95,7 +95,7 @@
 				return $('<div>').addClass('row').append($input, $remove);
 			}
 
-			this.$holder.find('li').each(function() {
+			eip.$holder.find('li').each(function(eip) {
 				var $li = $(this);
 				var $row = _createRow($li.text());
 				$input.append($row);
