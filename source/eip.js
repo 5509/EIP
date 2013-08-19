@@ -42,90 +42,99 @@
     this.$el.empty().append(this.$holder, this.$form);
     this.$el.data('eip', this);
   }
-  EIP.prototype = {
-    _initHolder: function() {
-      var self = this;
 
-      var ph = this.data('placeholder') || this.option.placeholder;
+  EIP.prototype._initHolder = function() {
+    var self = this;
 
-      this.$placeholder = $('<span>').addClass('eip-placeholder').text(ph);
-      this.$holder = $('<div>').addClass('eip-holder');
-      this.$holder.html(this.$el.html() || this.$placeholder);
+    var ph = this.data('placeholder') || this.option.placeholder;
 
-      this.$holder.click(function() {
-        self.replaceToForm();
-      });
-    },
-    _initForm: function() {
-      var self = this;
+    this.$placeholder = $('<span>').addClass('eip-placeholder').text(ph);
+    this.$holder = $('<div>').addClass('eip-holder');
+    this.$holder.html(this.$el.html() || this.$placeholder);
 
-      this.$form = $('<form>').hide();
-      this.$save = $('<input type="submit">')
-        .addClass('eip-save')
-        .val(this.option.submitLabel);
-      this.$cancel = $('<input type="button">')
-        .addClass('eip-cancel')
-        .val(this.option.cancelLabel);
-      this.$buttons = $('<div>')
-        .addClass('eip-buttons')
-        .append(this.$save, this.$cancel);
-      this.$form.append(this.$buttons);
+    this.$holder.click(function() {
+      self.replaceToForm();
+    });
+  };
 
-      this.$form.submit(function(e) {
-        e.preventDefault();
-        self.submit();
-      });
+  EIP.prototype._initForm = function() {
+    var self = this;
 
-      this.$cancel.click(function(e) {
-        self.cancel();
-      });
-    },
-    replaceToForm: function() {
-      var self = this;
+    this.$form = $('<form>').hide();
+    this.$save = $('<input type="submit">')
+      .addClass('eip-save')
+      .val(this.option.submitLabel);
+    this.$cancel = $('<input type="button">')
+      .addClass('eip-cancel')
+      .val(this.option.cancelLabel);
+    this.$buttons = $('<div>')
+      .addClass('eip-buttons')
+      .append(this.$save, this.$cancel);
+    this.$form.append(this.$buttons);
 
-      this.changeStateToEdit();
-      this.$holder.hide();
-      this.$form.show();
+    this.$form.submit(function(e) {
+      e.preventDefault();
+      self.submit();
+    });
 
-      // delay for buttons transition
-      setTimeout(function() {
-        self.$buttons.addClass('eip-buttons-show');
-      }, 0);
+    this.$cancel.click(function(e) {
+      self.cancel();
+    });
+  };
 
-      this.type.renderForm.call(this);
-    },
-    replaceToHolder: function(cancel) {
-      this.changeStateToView();
-      this.$form.hide();
-      this.$holder.show();
-      this.$buttons.removeClass('eip-buttons-show');
+  EIP.prototype.replaceToForm = function() {
+    var self = this;
 
-      if (!cancel) {
-        this.type.renderHolder.call(this);
-      }
-    },
-    submit: function() {
-      this.$el.trigger('eip:submit');
-      this.replaceToHolder();
-    },
-    cancel: function() {
-      this.replaceToHolder(true);
-    },
-    changeStateToEdit: function() {
-      this.currentState = STATE.VIEW;
-    },
-    changeStateToView: function() {
-      this.currentState = STATE.EDIT;
-    },
-    isViewState: function() {
-      return this.currentState === STATE.VIEW;
-    },
-    isEditState: function() {
-      return this.currentState === STATE.EDIT;
-    },
-    data: function(name, val) {
-      return this.$el.attr('data-eip-' + name);
+    this.changeStateToEdit();
+    this.$holder.hide();
+    this.$form.show();
+
+    // delay for buttons transition
+    setTimeout(function() {
+      self.$buttons.addClass('eip-buttons-show');
+    }, 0);
+
+    this.type.renderForm.call(this);
+  };
+
+  EIP.prototype.replaceToHolder = function(cancel) {
+    this.changeStateToView();
+    this.$form.hide();
+    this.$holder.show();
+    this.$buttons.removeClass('eip-buttons-show');
+
+    if (!cancel) {
+      this.type.renderHolder.call(this);
     }
+  };
+
+  EIP.prototype.submit = function() {
+    this.$el.trigger('eip:submit');
+    this.replaceToHolder();
+  };
+
+  EIP.prototype.cancel = function() {
+    this.replaceToHolder(true);
+  };
+
+  EIP.prototype.changeStateToEdit = function() {
+    this.currentState = STATE.VIEW;
+  };
+
+  EIP.prototype.changeStateToView = function() {
+    this.currentState = STATE.EDIT;
+  };
+
+  EIP.prototype.isViewState = function() {
+    return this.currentState === STATE.VIEW;
+  };
+
+  EIP.prototype.isEditState = function() {
+    return this.currentState === STATE.EDIT;
+  };
+
+  EIP.prototype.data = function(name, val) {
+    return this.$el.attr('data-eip-' + name);
   };
 
   var types = {};
@@ -134,10 +143,12 @@
     this.name = name;
     types[this.name] = {};
   }
+
   Type.prototype.on = function(eventName, fn) {
     types[this.name][eventName] = fn;
     return this;
   };
+
   Type.prototype.extend = function(name) {
     $.extend(true, types[this.name], types[name]);
     return this;
