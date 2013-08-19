@@ -27,6 +27,7 @@
     VIEW: 1,
     EDIT: 2
   };
+  var RE_DATE_ATTR = /^data-eip-attr-(.+)$/;
 
   function EIP($el, option) {
     this.$el = $el;
@@ -137,6 +138,21 @@
     return this.$el.attr('data-eip-' + name);
   };
 
+  EIP.prototype.getAttrs = function() {
+    var ret = {};
+    var attrs = this.$el.get(0).attributes;
+    var attr, name, m;
+    for (var i = 0, len = attrs.length; i < len; i++) {
+      attr = attrs[i];
+      name = attr.name;
+      m = name.match(RE_DATE_ATTR);
+      if (m) {
+        ret[m[1]] = attr.value;
+      }
+    }
+    return ret;
+  };
+
 
   function Type(name) {
     this.name = name;
@@ -161,12 +177,12 @@
 
   EIP.defineType('default')
     .on('init', function() {
-      this.$input = $('<input>')
-        .attr({
-          type: this.typeName || 'text',
-          name: this.data('name')
-        });
+      var attrs = $.extend({
+        type: this.typeName || 'text',
+        name: this.data('name')
+      }, this.getAttrs());
 
+      this.$input = $('<input>').attr(attrs);
       this.$form.prepend(this.$input);
     })
     .on('renderHolder', function() {
@@ -187,7 +203,8 @@
   EIP.defineType('textarea')
     .extend('default')
     .on('init', function() {
-      this.$input = $('<textarea>').attr('name', this.data('name'));
+      var attrs = $.extend({ name: this.data('name') }, this.getAttrs());
+      this.$input = $('<textarea>').attr(attrs);
       this.$form.prepend(this.$input);
     });
 
@@ -203,10 +220,8 @@
         return '<option value="' + key + '">' + val + '</option>';
       }).join('');
 
-      this.$input = $('<select>')
-        .attr('name', this.data('name'))
-        .html(options);
-
+      var attrs = $.extend({ name: this.data('name') }, this.getAttrs());
+      this.$input = $('<select>').attr(attrs).html(options);
       this.$form.prepend(this.$input);
     })
     .on('renderHolder', function() {

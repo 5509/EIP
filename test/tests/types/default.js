@@ -1,13 +1,13 @@
 describe('types default', function() {
   var html, $eip;
+  afterEach(function() {
+    $eip.remove();
+  });
 
   context('when only data-eip-name', function() {
     beforeEach(function() {
       html = '<div data-eip-name="foo"></div>';
       $eip = $(html).eip().appendTo('body');
-    });
-    afterEach(function() {
-      $eip.remove();
     });
 
     it('should has form', function() {
@@ -72,6 +72,25 @@ describe('types default', function() {
         var $holder = $eip.find('.eip-holder');
         expect($holder.html()).to.be('value!');
       });
+    });
+  });
+
+  context('set data-eip-attr-*', function() {
+    beforeEach(function() {
+      html = 
+        '<div ' +
+          'data-eip-attr-maxlength="3"' +
+          'data-eip-attr-foo="bar">' +
+          'data-eip-a="b">' +
+        '</div>';
+      $eip = $(html).eip().appendTo('body');
+    });
+
+    it('should set attribute in input element', function() {
+      var $input = $eip.find('form input[type="text"]');
+      expect($input.attr('maxlength')).to.be('3');
+      expect($input.attr('foo')).to.be('bar');
+      expect($input.attr('a')).to.be(undefined);
     });
   });
 });
