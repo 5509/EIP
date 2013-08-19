@@ -32,7 +32,7 @@
     this.$el = $el;
     this.option = option;
     this.typeName = this.data('type');
-    this.type = types[this.typeName] || types['text'];
+    this.type = Type.types[this.typeName] || Type.types['text'];
     this.currentState = STATE.VIEW;
 
     this._initHolder();
@@ -137,20 +137,21 @@
     return this.$el.attr('data-eip-' + name);
   };
 
-  var types = {};
 
   function Type(name) {
     this.name = name;
-    types[this.name] = {};
+    Type.types[this.name] = {};
   }
 
+  Type.types = {};
+
   Type.prototype.on = function(eventName, fn) {
-    types[this.name][eventName] = fn;
+    Type.types[this.name][eventName] = fn;
     return this;
   };
 
   Type.prototype.extend = function(name) {
-    $.extend(true, types[this.name], types[name]);
+    $.extend(true, Type.types[this.name], Type.types[name]);
     return this;
   };
 
