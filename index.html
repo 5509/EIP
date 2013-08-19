@@ -56,11 +56,11 @@
 <script src="source/eip.js"></script>
 <script>
 	EIP.defineType('list')
-		.on('init', function(eip) {
+		.when('init', function(eip) {
 			eip.$input = $('<div>');
 			eip.$form.prepend(eip.$input);
 		})
-		.on('renderHolder', function(eip) {
+		.when('renderHolder', function(eip) {
 			var $ul = $('<ul>');
 
 			eip.$input.find('input[type="text"]').each(function() {
@@ -72,7 +72,7 @@
 
 			eip.$holder.html($ul);
 		})
-		.on('renderForm', function(eip) {
+		.when('renderForm', function(eip) {
 			var $input = eip.$input.empty();
 			var name = eip.data('name');
 
