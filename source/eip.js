@@ -210,27 +210,33 @@
 
   EIP.defineType('select')
     .on('init', function() {
+      var $select = $('<select>');
       var datalist = $.parseJSON(this.data('datalist'));
-      var options = $.map(datalist, function(val) {
+      $.each(datalist, function(i, val) {
         var key = val;
         if ($.isArray(val)) {
           key = val[0];
           val = val[1];
         }
-        return '<option value="' + key + '">' + val + '</option>';
-      }).join('');
+
+        var $option = $('<option>').attr('value', key).text(val);
+        $select.append($option);
+      });
 
       var attrs = $.extend({ name: this.data('name') }, this.getAttrs());
-      this.$input = $('<select>').attr(attrs).html(options);
+      this.$input = $select.attr(attrs);
       this.$form.prepend(this.$input);
     })
     .on('renderHolder', function() {
-      var val = this.$input.val();
-      var html = this.$el.find('option').filter(function() {
-        return $(this).attr('value') === val;
-      }).text() || this.$placeholder;
+      var $selected = this.$el.find('option:selected');
+      var text = $selected.text();
 
-      this.$holder.html(html);
+      if (text && $selected.attr('value')) {
+        this.$holder.text(text);
+      }
+      else {
+        this.$holder.html(this.$placeholder);
+      }
     })
     .on('renderForm', function() {
       var val = this.$holder.html();
@@ -263,7 +269,7 @@
         }, self.getAttrs());
 
         var $input = $('<input>').attr(attrs);
-        var $span = $('<span>').html(val);
+        var $span = $('<span>').text(val);
 
         return $('<label>').append($input, $span);
       });
@@ -271,17 +277,21 @@
       this.$form.prepend.apply(this.$form, $labels);
     })
     .on('renderHolder', function() {
-      var val = this.$form.find('input[type="radio"]:checked').closest('label').text();
-      var html = val || this.$placeholder;
+      var text = this.$form.find('input[type="radio"]:checked').closest('label').text();
 
-      this.$holder.html(html);
+      if (text) {
+        this.$holder.text(text);
+      }
+      else {
+        this.$holder.html(this.$placeholder);
+      }
     })
     .on('renderForm', function() {
       var val = this.$holder.html();
       this.$form.find('label').each(function() {
         var $label = $(this);
         var $radio = $label.find('input[type="radio"]');
-        if ($label.text() === val) {
+        if ($label.find('span').html() === val) {
           $radio.attr('checked', true);
           return false;
         }
