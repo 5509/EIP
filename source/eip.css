@@ -28,6 +28,16 @@
 .eip[data-eip-type="textarea"] .eip-holder {
 	white-space: pre-wrap;
 }
+.eip[data-eip-type="radio"] label {
+	margin-right: 15px;
+	cursor: pointer;
+}
+.eip[data-eip-type="radio"] label > input[type="radio"] {
+	vertical-align: top;
+}
+.eip[data-eip-type="radio"] label > span {
+	margin-left: 5px;
+}
 
 .eip .eip-buttons {
 	padding-top: .5em;

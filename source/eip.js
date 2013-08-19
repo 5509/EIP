@@ -243,5 +243,50 @@
       });
     });
 
+  EIP.defineType('radio')
+    .on('init', function() {
+      var self = this;
+      var name = this.data('name');
+      var datalist = $.parseJSON(this.data('datalist'));
+
+      var $labels = $.map(datalist, function(val) {
+        var key = val;
+        if ($.isArray(val)) {
+          key = val[0];
+          val = val[1];
+        }
+
+        var attrs = $.extend({
+          type: 'radio',
+          name: name,
+          value: key
+        }, self.getAttrs());
+
+        var $input = $('<input>').attr(attrs);
+        var $span = $('<span>').html(val);
+
+        return $('<label>').append($input, $span);
+      });
+
+      this.$form.prepend.apply(this.$form, $labels);
+    })
+    .on('renderHolder', function() {
+      var val = this.$form.find('input[type="radio"]:checked').closest('label').text();
+      var html = val || this.$placeholder;
+
+      this.$holder.html(html);
+    })
+    .on('renderForm', function() {
+      var val = this.$holder.html();
+      this.$form.find('label').each(function() {
+        var $label = $(this);
+        var $radio = $label.find('input[type="radio"]');
+        if ($label.text() === val) {
+          $radio.attr('checked', true);
+          return false;
+        }
+      });
+    });
+
   window.EIP = EIP;
 }(jQuery));
