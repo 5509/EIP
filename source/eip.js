@@ -27,7 +27,7 @@
     VIEW: 1,
     EDIT: 2
   };
-  var RE_DATE_ATTR = /^data-eip-attr-(.+)$/;
+  var RE_DATA_ATTR = /^data-eip-attr-(.+)$/;
 
   function EIP($el, option) {
     this.$el = $el;
@@ -145,7 +145,7 @@
     for (var i = 0, len = attrs.length; i < len; i++) {
       attr = attrs[i];
       name = attr.name;
-      m = name.match(RE_DATE_ATTR);
+      m = name.match(RE_DATA_ATTR);
       if (m) {
         ret[m[1]] = attr.value;
       }
