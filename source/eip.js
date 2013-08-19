@@ -32,7 +32,7 @@
     this.$el = $el;
     this.option = option;
     this.typeName = this.data('type');
-    this.type = Type.types[this.typeName] || Type.types['text'];
+    this.type = Type.types[this.typeName] || Type.types['default'];
     this.currentState = STATE.VIEW;
 
     this._initHolder();
@@ -159,7 +159,7 @@
     return new Type(name);
   };
 
-  EIP.defineType('text')
+  EIP.defineType('default')
     .on('init', function() {
       this.$input = $('<input>')
         .attr({
@@ -185,7 +185,7 @@
     });
 
   EIP.defineType('textarea')
-    .extend('text')
+    .extend('default')
     .on('init', function() {
       this.$input = $('<textarea>').attr('name', this.data('name'));
       this.$form.prepend(this.$input);
