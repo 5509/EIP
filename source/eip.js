@@ -32,7 +32,7 @@
     this.$el = $el;
     this.option = option;
     this.typeName = this.data('type');
-    this.type = EIP.types[this.typeName] || EIP.types['default'];
+    this.type = types[this.typeName] || types['text'];
     this.currentState = STATE.VIEW;
 
     this._initHolder();
@@ -128,14 +128,27 @@
     }
   };
 
-  EIP.types = {};
+  var types = {};
 
-  EIP.defineType = function(typeName, funcs) {
-    EIP.types[typeName] = funcs;
+  function Type(name) {
+    this.name = name;
+    types[this.name] = {};
+  }
+  Type.prototype.on = function(eventName, fn) {
+    types[this.name][eventName] = fn;
+    return this;
+  };
+  Type.prototype.extend = function(name) {
+    $.extend(true, types[this.name], types[name]);
+    return this;
   };
 
-  EIP.defineType('default', {
-    init: function() {
+  EIP.defineType = function(name) {
+    return new Type(name);
+  };
+
+  EIP.defineType('text')
+    .on('init', function() {
       this.$input = $('<input>')
         .attr({
           type: this.typeName || 'text',
@@ -143,36 +156,31 @@
         });
 
       this.$form.prepend(this.$input);
-    },
-    renderHolder: function() {
+    })
+    .on('renderHolder', function() {
       var val = this.$input.val();
-      var html = val ? htmlEscape(val) : this.$placeholder;
-      this.$holder.html(html);
-    },
-    renderForm: function() {
-      var val = this.$holder.html();
-      this.$input.val(htmlUnescape(val)).focus();
-    }
-  });
 
-  EIP.defineType('textarea', {
-    init: function() {
+      if (val) {
+        this.$holder.text(val);
+      }
+      else {
+        this.$holder.html(this.$placeholder);
+      }
+    })
+    .on('renderForm', function() {
+      var val = this.$holder.text();
+      this.$input.val(val).focus();
+    });
+
+  EIP.defineType('textarea')
+    .extend('text')
+    .on('init', function() {
       this.$input = $('<textarea>').attr('name', this.data('name'));
       this.$form.prepend(this.$input);
-    },
-    renderHolder: function() {
-      var val = this.$input.val();
-      var html = val ? htmlEscape(val) : this.$placeholder;
-      this.$holder.html(html);
-    },
-    renderForm: function() {
-      var val = this.$holder.html();
-      this.$input.val(htmlUnescape(val)).focus();
-    }
-  });
+    });
 
-  EIP.defineType('select', {
-    init: function() {
+  EIP.defineType('select')
+    .on('init', function() {
       var datalist = $.parseJSON(this.data('datalist'));
       var options = $.map(datalist, function(val) {
         var key = val;
@@ -188,16 +196,16 @@
         .html(options);
 
       this.$form.prepend(this.$input);
-    },
-    renderHolder: function() {
+    })
+    .on('renderHolder', function() {
       var val = this.$input.val();
       var html = this.$el.find('option').filter(function() {
         return $(this).attr('value') === val;
       }).text() || this.$placeholder;
 
       this.$holder.html(html);
-    },
-    renderForm: function() {
+    })
+    .on('renderForm', function() {
       var val = this.$holder.html();
       this.$input.find('option').each(function() {
         var $option = $(this);
@@ -206,15 +214,7 @@
           return false;
         }
       });
-    }
-  });
-
-  function htmlUnescape(str) {
-    return $('<div>').html(str).text();
-  }
-  function htmlEscape(str) {
-    return $('<div>').text(str).html();
-  }
+    });
 
   window.EIP = EIP;
 }(jQuery));

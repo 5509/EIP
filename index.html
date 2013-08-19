@@ -55,12 +55,12 @@
 <script src="common/js/jquery.js"></script>
 <script src="source/eip.js"></script>
 <script>
-	EIP.defineType('list', {
-		init: function() {
+	EIP.defineType('list')
+		.on('init', function() {
 			this.$input = $('<div>');
 			this.$form.prepend(this.$input);
-		},
-		renderHolder: function() {
+		})
+		.on('renderHolder', function() {
 			var $ul = $('<ul>');
 
 			this.$input.find('input[type="text"]').each(function() {
@@ -71,8 +71,8 @@
 			});
 
 			this.$holder.html($ul);
-		},
-		renderForm: function() {
+		})
+		.on('renderForm', function() {
 			var $input = this.$input.empty();
 			var name = this.data('name');
 
@@ -110,8 +110,7 @@
 
 			applyNameAttr();
 			$input.after($add);
-		},
-	});
+		});
 
 	jQuery(function($) {
 		$("div.eip").eip().bind('eip:submit', function(ev) {
