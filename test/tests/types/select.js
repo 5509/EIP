@@ -7,14 +7,13 @@ describe('types select', function() {
     ['3', '&lt;em&gt;foo&lt;/em&gt;']
   ];
   var data = JSON.stringify(datalist);
-  var html, $eip, $holder, $form, $select;
+  var html, $eip, eip, $select;
 
   beforeEach(function() {
     html = "<div data-eip-type='select' data-eip-datalist='" + data + "'>" + defaultValeu + "</div>";
     $eip = $(html).eip().appendTo('body');
-    $holder = $eip.find('.eip-holder');
-    $form = $eip.find('form');
-    $select = $form.find('select');
+    eip = $eip.data('eip');
+    $select = eip.$form.find('select');
   });
   afterEach(function() {
     $eip.remove();
@@ -30,7 +29,7 @@ describe('types select', function() {
 
   context('when show form', function() {
     it('should select 1', function() {
-      $holder.click();
+      eip.$holder.click();
       expect($select.val()).to.be('1');
     });
   });
@@ -39,28 +38,28 @@ describe('types select', function() {
     it('should be $placeholder', function() {
       var $placeholder = $eip.data('eip').$placeholder;
       var html = $('<div>').append($placeholder).html();
-      $holder.click();
+      eip.$holder.click();
       $select.find('option').eq(0).attr('selected', true);
-      $form.submit();
-      expect($holder.html()).to.be(html);
+      eip.$form.submit();
+      expect(eip.$holder.html()).to.be(html);
     });
   });
 
   context('when select A &amp; B and submit', function() {
     it('should be A &amp; B', function() {
-      $holder.click();
+      eip.$holder.click();
       $select.val('2');
-      $form.submit();
-      expect($holder.html()).to.be('A &amp; B');
+      eip.$form.submit();
+      expect(eip.$holder.html()).to.be('A &amp; B');
     });
   });
 
   context('when select &lt;em&gt;foo&lt;/em&gt; and submit', function() {
     it('should be &lt;em&gt;foo&lt;/em&gt;', function() {
-      $holder.click();
+      eip.$holder.click();
       $select.val('3');
-      $form.submit();
-      expect($holder.html()).to.be('&lt;em&gt;foo&lt;/em&gt;');
+      eip.$form.submit();
+      expect(eip.$holder.html()).to.be('&lt;em&gt;foo&lt;/em&gt;');
     });
   });
 
@@ -70,7 +69,7 @@ describe('types select', function() {
     });
     context('when show form', function() {
       it('should select 2', function() {
-        $holder.click();
+        eip.$holder.click();
         expect($select.val()).to.be('2');
       });
     });
