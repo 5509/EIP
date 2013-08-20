@@ -252,7 +252,7 @@
       eip.$input.find('option').each(function() {
         var $option = $(this);
         if ($.trim($option.html()) === $.trim(val)) {
-          $option.attr('selected', true);
+          $option.prop('selected', true);
           return false;
         }
       });
@@ -282,7 +282,7 @@
         var $label = $(this);
         var $radio = $label.find('input[type="radio"]');
         if ($.trim($label.find('span').html()) === $.trim(val)) {
-          $radio.attr('checked', true);
+          $radio.prop('checked', true);
           return false;
         }
       });
