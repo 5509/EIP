@@ -112,8 +112,12 @@
   };
 
   EIP.prototype.submit = function() {
-    this.$el.trigger('eip:submit');
-    this.replaceToHolder();
+    var event = $.Event('eip:submit');
+    this.$el.trigger(event);
+
+    if (!event.isDefaultPrevented()) {
+      this.replaceToHolder();
+    }
   };
 
   EIP.prototype.cancel = function() {

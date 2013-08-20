@@ -59,19 +59,49 @@ describe('types default', function() {
       beforeEach(function() {
         eip.$holder.click();
         eip.$input.find('input[name="foo"]').val('value!');
-        eip.$form.submit();
       });
 
       it('form should not visible', function() {
+        eip.$form.submit();
         expect(eip.$form.is(':visible')).to.be(false);
       });
 
       it('holder should visible', function() {
+        eip.$form.submit();
         expect(eip.$holder.is(':visible')).to.be(true);
       });
 
       it('holder HTML should be submitted value', function() {
+        eip.$form.submit();
         expect(eip.$holder.html()).to.be('value!');
+      });
+
+      it('should be fired eip:submit event', function(done) {
+        $eip.bind('eip:submit', function() {
+          expect(this).to.be($eip.get(0));
+          done();
+        });
+        eip.$form.submit();
+      });
+
+      context('when called event.preventDefault()', function() {
+        beforeEach(function(done) {
+          $eip.bind('eip:submit', function(e) {
+            e.preventDefault();
+            done();
+          });
+          eip.$form.submit();
+        });
+
+        it('form should visible', function() {
+          eip.$form.submit();
+          expect(eip.$form.is(':visible')).to.be(true);
+        });
+
+        it('holder should not visible', function() {
+          eip.$form.submit();
+          expect(eip.$holder.is(':visible')).to.be(false);
+        });
       });
     });
   });
