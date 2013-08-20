@@ -35,6 +35,13 @@ describe('types default', function() {
       expect($default.text()).to.be('Click here to edit');
     });
 
+    it('should has <input type="text" name="foo">', function() {
+      var $input = eip.$input.find('input');
+      expect($input.length).to.be(1);
+      expect($input.attr('type')).to.be('text');
+      expect($input.attr('name')).to.be('foo');
+    });
+
     context('when clicked $holder', function() {
       beforeEach(function() {
         eip.$holder.click();
@@ -106,7 +113,20 @@ describe('types default', function() {
     });
   });
 
-  context('set data-eip-attr-*', function() {
+  context('when data-eip-type set to `date`', function() {
+    beforeEach(function() {
+      html = '<div data-eip-type="date"></div>';
+      $eip = $(html).eip().appendTo('body');
+      eip = $eip.data('eip');
+    });
+
+    it('should has <input type="date">', function() {
+      var $input = eip.$input.find('input');
+      expect($input.attr('type')).to.be('date');
+    });
+  });
+
+  context('when set data-eip-attr-*', function() {
     beforeEach(function() {
       html = 
         '<div ' +

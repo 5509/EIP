@@ -11,13 +11,29 @@ describe('types select', function() {
   var html, $eip, eip, $select;
 
   beforeEach(function() {
-    html = "<div data-eip-type='select' data-eip-datalist='" + data + "'>" + defaultValeu + "</div>";
+    html = 
+      '<div ' +
+        'data-eip-type="select" ' + 
+        'data-eip-name="foo" ' + 
+        "data-eip-datalist='" + data + "'>" +
+        defaultValeu +
+      '</div>';
     $eip = $(html).eip().appendTo('body');
     eip = $eip.data('eip');
     $select = eip.$form.find('select');
   });
   afterEach(function() {
     $eip.remove();
+  });
+
+  it('should has select element', function() {
+    expect($select.length).to.be(1);
+    expect($select.attr('name')).to.be('foo');
+  });
+
+  it('should has option element', function() {
+    var $options = $select.find('option');
+    expect($options.length).to.be(datalist.length);
   });
 
   describe('form values', function() {

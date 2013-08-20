@@ -10,7 +10,13 @@ describe('types radio', function() {
   var html, $eip, eip, $radio, $span;
 
   beforeEach(function() {
-    html = "<div data-eip-name='foo' data-eip-type='radio' data-eip-datalist='" + data + "'>" + defaultValeu + "</div>";
+    html = 
+      '<div ' +
+        'data-eip-name="foo" ' +
+        'data-eip-type="radio" ' +
+        "data-eip-datalist='" + data + "'>" +
+        defaultValeu +
+      '</div>';
     $eip = $(html).eip().appendTo('body');
     eip = $eip.data('eip');
     $radio = eip.$form.find('input[type="radio"]');
@@ -32,6 +38,12 @@ describe('types radio', function() {
       expect($span.eq(1).html()).to.be('A &amp; B');
       expect($span.eq(2).html()).to.be('&lt;em&gt;foo&lt;/em&gt;');
     });
+  });
+
+  it('should has input[type="radio"]', function() {
+    var $radio = eip.$input.find('input[type="radio"]');
+    expect($radio.length).to.be(datalist.length);
+    expect($radio.filter('[name="foo"]').length).to.be(datalist.length);
   });
 
   context('when no check', function() {
