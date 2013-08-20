@@ -84,8 +84,9 @@ describe('types default', function() {
       });
 
       it('should be fired eip:submit event', function(done) {
-        $eip.bind('eip:submit', function() {
+        $eip.bind('eip:submit', function(event, eip) {
           expect(this).to.be($eip.get(0));
+          expect(eip).to.be($(this).data('eip'));
           done();
         });
         eip.$form.submit();

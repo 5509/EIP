@@ -113,7 +113,7 @@
 
   EIP.prototype.submit = function() {
     var event = $.Event('eip:submit');
-    this.$el.trigger(event);
+    this.$el.trigger(event, this);
 
     if (!event.isDefaultPrevented()) {
       this.replaceToHolder();
