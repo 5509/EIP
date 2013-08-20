@@ -140,7 +140,13 @@
     return this.$el.attr('data-eip-' + name);
   };
 
-  EIP.prototype.getAttrs = function() {
+  EIP.prototype.getInputAttrs = function(attrs) {
+    var name = this.data('name');
+
+    return $.extend({ name: name }, this.getDataAttrs(), attrs);
+  };
+
+  EIP.prototype.getDataAttrs = function() {
     var ret = {};
     var attrs = this.$el.get(0).attributes;
     var attr, name, m;
@@ -164,6 +170,20 @@
     }
   };
 
+  EIP.prototype.eachDatalist = function(fn) {
+    var datalist = $.parseJSON(this.data('datalist'));
+    $.each(datalist, function(i, val) {
+      var key = val;
+
+      if ($.isArray(val)) {
+        key = val[0];
+        val = val[1];
+      }
+
+      fn(key, val);
+    });
+  };
+
 
   EIP.types = {};
 
@@ -173,11 +193,7 @@
 
   EIP.defineType('default', {
     init: function(eip) {
-      var attrs = $.extend({
-        type: eip.typeName || 'text',
-        name: eip.data('name')
-      }, eip.getAttrs());
-
+      var attrs = eip.getInputAttrs({ type: eip.typeName || 'text' });
       eip.$input.append($('<input>').attr(attrs));
     },
     renderHolder: function(eip) {
@@ -192,7 +208,7 @@
 
   EIP.defineType('textarea', {
     init: function(eip) {
-      var attrs = $.extend({ name: eip.data('name') }, eip.getAttrs());
+      var attrs = eip.getInputAttrs();
       eip.$input.append($('<textarea>').attr(attrs));
     },
     renderHolder: function(eip) {
@@ -207,22 +223,15 @@
 
   EIP.defineType('select', {
     init: function(eip) {
-      var datalist = $.parseJSON(eip.data('datalist'));
-      var attrs = $.extend({ name: eip.data('name') }, eip.getAttrs());
+      var attrs = eip.getInputAttrs();
       var $select = $('<select>').attr(attrs);
 
-      eip.$input.append($select);
-
-      $.each(datalist, function(i, val) {
-        var key = val;
-        if ($.isArray(val)) {
-          key = val[0];
-          val = val[1];
-        }
-
+      eip.eachDatalist(function(key, val) {
         var $option = $('<option>').attr('value', key).text(val);
         $select.append($option);
       });
+
+      eip.$input.append($select);
     },
     renderHolder: function(eip) {
       var $selected = eip.$input.find('option:selected');
@@ -248,22 +257,8 @@
 
   EIP.defineType('radio', {
     init: function(eip) {
-      var name = eip.data('name');
-      var datalist = $.parseJSON(eip.data('datalist'));
-
-      $.each(datalist, function(i, val) {
-        var key = val;
-        if ($.isArray(val)) {
-          key = val[0];
-          val = val[1];
-        }
-
-        var attrs = $.extend({
-          type: 'radio',
-          name: name,
-          value: key
-        }, eip.getAttrs());
-
+      eip.eachDatalist(function(key, val) {
+        var attrs = eip.getInputAttrs({ type: 'radio', value: key });
         var $input = $('<input>').attr(attrs);
         var $span = $('<span>').text(val);
         var $label = $('<label>').append($input, $span);
