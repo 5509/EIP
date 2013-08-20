@@ -4,7 +4,8 @@ describe('types select', function() {
     ['', '--'],
     ['1', 'A'],
     ['2', 'A &amp; B'],
-    ['3', '&lt;em&gt;foo&lt;/em&gt;']
+    ['3', '&lt;em&gt;foo&lt;/em&gt;'],
+    ['4', '  foo\n   ']
   ];
   var data = JSON.stringify(datalist);
   var html, $eip, eip, $select;
@@ -71,6 +72,18 @@ describe('types select', function() {
       it('should select 2', function() {
         eip.$holder.click();
         expect($select.val()).to.be('2');
+      });
+    });
+  });
+
+  context('when default value is " foo "', function() {
+    before(function() {
+      defaultValeu = ' foo ';
+    });
+    context('when show form', function() {
+      it('should select 4', function() {
+        eip.$holder.click();
+        expect($select.val()).to.be('4');
       });
     });
   });

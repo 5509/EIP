@@ -3,7 +3,8 @@ describe('types radio', function() {
   var datalist = [
     ['1', 'A'],
     ['2', 'A &amp; B'],
-    ['3', '&lt;em&gt;foo&lt;/em&gt;']
+    ['3', '&lt;em&gt;foo&lt;/em&gt;'],
+    ['4', '  foo\n   ']
   ];
   var data = JSON.stringify(datalist);
   var html, $eip, eip, $radio, $span;
@@ -70,6 +71,18 @@ describe('types radio', function() {
       it('should checked 2', function() {
         eip.$holder.click();
         expect($radio.filter(':checked').val()).to.be('2');
+      });
+    });
+  });
+
+  context('when default value is " foo "', function() {
+    before(function() {
+      defaultValeu = ' foo ';
+    });
+    context('when show form', function() {
+      it('should select 4', function() {
+        eip.$holder.click();
+        expect($radio.filter(':checked').val()).to.be('4');
       });
     });
   });

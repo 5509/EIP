@@ -251,7 +251,7 @@
       var val = eip.$holder.html();
       eip.$input.find('option').each(function() {
         var $option = $(this);
-        if ($option.html() === val) {
+        if ($.trim($option.html()) === $.trim(val)) {
           $option.attr('selected', true);
           return false;
         }
@@ -281,7 +281,7 @@
       eip.$input.find('label').each(function() {
         var $label = $(this);
         var $radio = $label.find('input[type="radio"]');
-        if ($label.find('span').html() === val) {
+        if ($.trim($label.find('span').html()) === $.trim(val)) {
           $radio.attr('checked', true);
           return false;
         }
