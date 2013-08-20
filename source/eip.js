@@ -33,7 +33,7 @@
     this.$el = $el;
     this.option = option;
     this.typeName = this.data('type');
-    this.type = Type.types[this.typeName] || Type.types['default'];
+    this.type = EIP.types[this.typeName] || EIP.types['default'];
     this.currentState = STATE.VIEW;
 
     this._initHolder();
@@ -61,7 +61,8 @@
   EIP.prototype._initForm = function() {
     var self = this;
 
-    this.$form = $('<form>').hide();
+    this.$form = $('<form>').addClass('eip-form').hide();
+    this.$input = $('<div>').addClass('eip-input');
     this.$save = $('<input type="submit">')
       .addClass('eip-save')
       .val(this.option.submitLabel);
@@ -71,7 +72,6 @@
     this.$buttons = $('<div>')
       .addClass('eip-buttons')
       .append(this.$save, this.$cancel);
-    this.$form.append(this.$buttons);
 
     this.$form.submit(function(e) {
       e.preventDefault();
@@ -81,6 +81,8 @@
     this.$cancel.click(function(e) {
       self.cancel();
     });
+
+    this.$form.append(this.$input, this.$buttons);
   };
 
   EIP.prototype.replaceToForm = function() {
@@ -153,65 +155,64 @@
     return ret;
   };
 
-
-  function Type(name) {
-    this.name = name;
-    Type.types[this.name] = {};
-  }
-
-  Type.types = {};
-
-  Type.prototype.when = function(eventName, fn) {
-    Type.types[this.name][eventName] = fn;
-    return this;
+  EIP.prototype.setHolder = function(val) {
+    if (val) {
+      this.$holder.text(val);
+    }
+    else {
+      this.$holder.html(this.$placeholder);
+    }
   };
 
-  Type.prototype.extend = function(name) {
-    $.extend(true, Type.types[this.name], Type.types[name]);
-    return this;
+
+  EIP.types = {};
+
+  EIP.defineType = function(name, funcs) {
+    EIP.types[name] = funcs;
   };
 
-  EIP.defineType = function(name) {
-    return new Type(name);
-  };
-
-  EIP.defineType('default')
-    .when('init', function(eip) {
+  EIP.defineType('default', {
+    init: function(eip) {
       var attrs = $.extend({
         type: eip.typeName || 'text',
         name: eip.data('name')
       }, eip.getAttrs());
 
-      eip.$input = $('<input>').attr(attrs);
-      eip.$form.prepend(eip.$input);
-    })
-    .when('renderHolder', function(eip) {
-      var val = eip.$input.val();
-
-      if (val) {
-        eip.$holder.text(val);
-      }
-      else {
-        eip.$holder.html(eip.$placeholder);
-      }
-    })
-    .when('renderForm', function(eip) {
+      eip.$input.append($('<input>').attr(attrs));
+    },
+    renderHolder: function(eip) {
+      var val = eip.$input.find('input').val();
+      eip.setHolder(val);
+    },
+    renderForm: function(eip) {
       var val = eip.$holder.text();
-      eip.$input.val(val).focus();
-    });
+      eip.$input.find('input').val(val).focus();
+    }
+  });
 
-  EIP.defineType('textarea')
-    .extend('default')
-    .when('init', function(eip) {
+  EIP.defineType('textarea', {
+    init: function(eip) {
       var attrs = $.extend({ name: eip.data('name') }, eip.getAttrs());
-      eip.$input = $('<textarea>').attr(attrs);
-      eip.$form.prepend(eip.$input);
-    });
+      eip.$input.append($('<textarea>').attr(attrs));
+    },
+    renderHolder: function(eip) {
+      var val = eip.$input.find('textarea').val();
+      eip.setHolder(val);
+    },
+    renderForm: function(eip) {
+      var val = eip.$holder.text();
+      eip.$input.find('textarea').val(val).focus();
+    }
+  });
 
-  EIP.defineType('select')
-    .when('init', function(eip) {
+  EIP.defineType('select', {
+    init: function(eip) {
       var $select = $('<select>');
       var datalist = $.parseJSON(eip.data('datalist'));
+      var attrs = $.extend({ name: eip.data('name') }, eip.getAttrs());
+
+      eip.$input.append($select.attr(attrs));
+
       $.each(datalist, function(i, val) {
         var key = val;
         if ($.isArray(val)) {
@@ -222,13 +223,9 @@
         var $option = $('<option>').attr('value', key).text(val);
         $select.append($option);
       });
-
-      var attrs = $.extend({ name: eip.data('name') }, eip.getAttrs());
-      eip.$input = $select.attr(attrs);
-      eip.$form.prepend(eip.$input);
-    })
-    .when('renderHolder', function(eip) {
-      var $selected = eip.$el.find('option:selected');
+    },
+    renderHolder: function(eip) {
+      var $selected = eip.$input.find('option:selected');
       var text = $selected.text();
 
       if (text && $selected.attr('value')) {
@@ -237,8 +234,8 @@
       else {
         eip.$holder.html(eip.$placeholder);
       }
-    })
-    .when('renderForm', function(eip) {
+    },
+    renderForm: function(eip) {
       var val = eip.$holder.html();
       eip.$input.find('option').each(function() {
         var $option = $(this);
@@ -247,10 +244,11 @@
           return false;
         }
       });
-    });
+    }
+  });
 
-  EIP.defineType('radio')
-    .when('init', function(eip) {
+  EIP.defineType('radio', {
+    init: function(eip) {
       var name = eip.data('name');
       var datalist = $.parseJSON(eip.data('datalist'));
 
@@ -269,25 +267,20 @@
 
         var $input = $('<input>').attr(attrs);
         var $span = $('<span>').text(val);
+        var $label = $('<label>').append($input, $span);
 
-        return $('<label>').append($input, $span);
+        eip.$input.append($label);
       });
+    },
+    renderHolder: function(eip) {
+      var $checked = eip.$input.find('input[type="radio"]:checked');
+      var val = $checked.closest('label').text();
 
-      eip.$form.prepend.apply(eip.$form, $labels);
-    })
-    .when('renderHolder', function(eip) {
-      var text = eip.$form.find('input[type="radio"]:checked').closest('label').text();
-
-      if (text) {
-        eip.$holder.text(text);
-      }
-      else {
-        eip.$holder.html(eip.$placeholder);
-      }
-    })
-    .when('renderForm', function(eip) {
+      eip.setHolder(val);
+    },
+    renderForm: function(eip) {
       var val = eip.$holder.html();
-      eip.$form.find('label').each(function() {
+      eip.$input.find('label').each(function() {
         var $label = $(this);
         var $radio = $label.find('input[type="radio"]');
         if ($label.find('span').html() === val) {
@@ -295,7 +288,8 @@
           return false;
         }
       });
-    });
+    }
+  });
 
   window.EIP = EIP;
 }(jQuery));
