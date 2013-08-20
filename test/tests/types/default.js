@@ -16,6 +16,11 @@ describe('types default', function() {
       expect($form.length).to.be(1);
       expect($form.is(':visible')).to.be(false);
     });
+
+    it('should has .eip-input', function() {
+      var $input = eip.$form.find('.eip-input');
+      expect($input.length).to.be(1);
+    });
     
     it('should has .eip-holder', function() {
       var $holder = $eip.children('.eip-holder');
