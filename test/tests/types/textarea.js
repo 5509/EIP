@@ -2,12 +2,12 @@ describe('type textarea', function() {
   var html, $eip, eip;
 
   beforeEach(function() {
-    html = '\
-    <div data-eip-type="textarea" data-eip-name="foo">\
-foo&lt;em&gt;bar&lt;/em&gt;&lt;br&gt;\n\
-hoge\n\
-fuga</div>\
-    ';
+    html =
+      '<div data-eip-type="textarea" data-eip-name="foo">' +
+        'foo&lt;em&gt;bar&lt;/em&gt;&lt;br&gt;\n' +
+        'hoge\n' +
+        'fuga' +
+      '</div>';
     $eip = $(html).eip().appendTo('body');
     eip = $eip.data('eip');
   });
