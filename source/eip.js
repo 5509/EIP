@@ -207,11 +207,11 @@
 
   EIP.defineType('select', {
     init: function(eip) {
-      var $select = $('<select>');
       var datalist = $.parseJSON(eip.data('datalist'));
       var attrs = $.extend({ name: eip.data('name') }, eip.getAttrs());
+      var $select = $('<select>').attr(attrs);
 
-      eip.$input.append($select.attr(attrs));
+      eip.$input.append($select);
 
       $.each(datalist, function(i, val) {
         var key = val;
@@ -228,12 +228,11 @@
       var $selected = eip.$input.find('option:selected');
       var text = $selected.text();
 
-      if (text && $selected.attr('value')) {
-        eip.$holder.text(text);
+      if (!$selected.attr('value')) {
+        text = null;
       }
-      else {
-        eip.$holder.html(eip.$placeholder);
-      }
+
+      eip.setHolder(text);
     },
     renderForm: function(eip) {
       var val = eip.$holder.html();
@@ -252,7 +251,7 @@
       var name = eip.data('name');
       var datalist = $.parseJSON(eip.data('datalist'));
 
-      var $labels = $.map(datalist, function(val) {
+      $.each(datalist, function(i, val) {
         var key = val;
         if ($.isArray(val)) {
           key = val[0];
