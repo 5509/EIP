@@ -119,12 +119,10 @@ describe('types default', function() {
       });
 
       context('when called event.preventDefault()', function() {
-        beforeEach(function(done) {
+        beforeEach(function() {
           $eip.bind('eip:submit', function(e) {
             e.preventDefault();
-            done();
           });
-          eip.$form.submit();
         });
 
         it('form should visible', function() {
