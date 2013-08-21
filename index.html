@@ -55,6 +55,14 @@
 <script src="common/js/jquery.js"></script>
 <script src="source/eip.js"></script>
 <script>
+	$(function() {
+		$('[data-eip-name="hobby"]').bind('eip:replaceedit', function(e) {
+			if (!window.confirm('編集しますか？')) {
+				e.preventDefault();
+			}
+		});
+	});
+
 	EIP.defineType('list', {
 		init: function(eip) { },
 		renderHolder: function(eip) {

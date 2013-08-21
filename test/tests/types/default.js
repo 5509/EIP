@@ -4,7 +4,7 @@ describe('types default', function() {
     $eip.remove();
   });
 
-  context('when only data-eip-name', function() {
+  describe('basic', function() {
     beforeEach(function() {
       html = '<div data-eip-name="foo"></div>';
       $eip = $(html).eip().appendTo('body');
@@ -43,22 +43,48 @@ describe('types default', function() {
     });
 
     context('when clicked $holder', function() {
-      beforeEach(function() {
-        eip.$holder.click();
-      });
-
       it('form should visible', function() {
+        eip.$holder.click();
         expect(eip.$form.length).to.be(1);
         expect(eip.$form.is(':visible')).to.be(true);
       });
 
       it('holder should not visible', function() {
+        eip.$holder.click();
         expect(eip.$holder.is(':visible')).to.be(false);
       });
 
       it('should has <input type="text" name="foo">', function() {
+        eip.$holder.click();
         var $input = eip.$input.find('input[type="text"]');
         expect($input.attr('name')).to.be('foo');
+      });
+
+      it('should be fired eip:replaceedit', function(done) {
+        $eip.bind('eip:replaceedit', function(event, eip) {
+          expect(this).to.be($eip.get(0));
+          expect(eip).to.be($(this).data('eip'));
+          done();
+        });
+        eip.$holder.click();
+      });
+
+      context('when called event.preventDefault()', function() {
+        beforeEach(function() {
+          $eip.bind('eip:replaceedit', function(e) {
+            e.preventDefault();
+          });
+        });
+
+        it('holder should visible', function() {
+          eip.$holder.click();
+          expect(eip.$holder.is(':visible')).to.be(true);
+        });
+
+        it('form should not visible', function() {
+          eip.$holder.click();
+          expect(eip.$form.is(':visible')).to.be(false);
+        });
       });
     });
 

@@ -54,7 +54,7 @@
     this.$holder.html(this.$el.html() || this.$placeholder);
 
     this.$holder.click(function() {
-      self.replaceToForm();
+      self.clickHolder();
     });
   };
 
@@ -108,6 +108,15 @@
 
     if (!cancel) {
       this.type.renderHolder(this);
+    }
+  };
+
+  EIP.prototype.clickHolder = function() {
+    var event = $.Event('eip:replaceedit');
+    this.$el.trigger(event, this);
+
+    if (!event.isDefaultPrevented()) {
+      this.replaceToForm();
     }
   };
 
