@@ -47,11 +47,15 @@
   EIP.prototype._initHolder = function() {
     var self = this;
 
-    var ph = this.data('placeholder') || this.option.placeholder;
-
-    this.$placeholder = $('<span>').addClass('eip-placeholder').text(ph);
     this.$holder = $('<div>').addClass('eip-holder');
-    this.$holder.html(this.$el.html() || this.$placeholder);
+    this.$holder.html(this.$el.html());
+
+    var text = this.data('placeholder') || this.option.placeholder;
+    this.$placeholder = $('<span>').addClass('eip-placeholder').text(text);
+
+    if (!this.$holder.text()) {
+      this.$holder.append(this.$placeholder);
+    }
 
     this.$holder.click(function() {
       self.clickHolder();
@@ -174,6 +178,18 @@
     return ret;
   };
 
+  EIP.prototype.hasPlaceholder = function() {
+    return this.$holder.find(this.$placeholder).length !== 0;
+  };
+
+  EIP.prototype.getHolderText = function() {
+    return this.hasPlaceholder() ? '' : this.$holder.text();
+  };
+
+  EIP.prototype.getHolderHtml = function() {
+    return this.hasPlaceholder() ? '' : this.$holder.html();
+  };
+
   EIP.prototype.setHolder = function(val) {
     if (val) {
       this.$holder.text(val);
@@ -214,7 +230,7 @@
       eip.setHolder(val);
     },
     renderForm: function(eip) {
-      var val = eip.$holder.text();
+      var val = eip.getHolderText();
       eip.$input.find('input').val(val).focus();
     }
   });
@@ -229,7 +245,7 @@
       eip.setHolder(val);
     },
     renderForm: function(eip) {
-      var val = eip.$holder.text();
+      var val = eip.getHolderText();
       eip.$input.find('textarea').val(val).focus();
     }
   });
@@ -257,7 +273,7 @@
       eip.setHolder(text);
     },
     renderForm: function(eip) {
-      var val = eip.$holder.html();
+      var val = eip.getHolderHtml();
       eip.$input.find('option').each(function() {
         var $option = $(this);
         if ($.trim($option.html()) === $.trim(val)) {
@@ -286,7 +302,7 @@
       eip.setHolder(val);
     },
     renderForm: function(eip) {
-      var val = eip.$holder.html();
+      var val = eip.getHolderHtml();
       eip.$input.find('label').each(function() {
         var $label = $(this);
         var $radio = $label.find('input[type="radio"]');

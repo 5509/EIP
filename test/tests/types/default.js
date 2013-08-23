@@ -4,7 +4,7 @@ describe('types default', function() {
     $eip.remove();
   });
 
-  describe('basic', function() {
+  context('when basic', function() {
     beforeEach(function() {
       html = '<div data-eip-name="foo"></div>';
       $eip = $(html).eip().appendTo('body');
@@ -54,10 +54,11 @@ describe('types default', function() {
         expect(eip.$holder.is(':visible')).to.be(false);
       });
 
-      it('should has <input type="text" name="foo">', function() {
+      it('should has <input type="text" name="foo" value="">', function() {
         eip.$holder.click();
         var $input = eip.$input.find('input[type="text"]');
         expect($input.attr('name')).to.be('foo');
+        expect($input.val()).to.be('');
       });
 
       it('should be fired eip:replaceedit', function(done) {
@@ -168,6 +169,20 @@ describe('types default', function() {
       expect($input.attr('maxlength')).to.be('3');
       expect($input.attr('foo')).to.be('bar');
       expect($input.attr('a')).to.be(undefined);
+    });
+  });
+
+  context('when has HTML entity', function() {
+    beforeEach(function() {
+      html = '<div>A &amp; B & <del>foo</del> &lt;hr&gt;</div>';
+      $eip = $(html).eip().appendTo('body');
+      eip = $eip.data('eip');
+    });
+
+    it('should be escaped', function() {
+      eip.$holder.click();
+      var $input = eip.$input.find('input[type="text"]');
+      expect($input.val()).to.be('A & B & foo <hr>');
     });
   });
 });
