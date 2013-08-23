@@ -11,6 +11,10 @@
 	background-color: rgba(255, 251, 204, .7);
 }
 
+.eip .eip-placeholder {
+	color: #666;
+}
+
 .eip form {
 	padding: 3px;
 }
