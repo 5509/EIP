@@ -1,0 +1,7 @@
+このリポジトリにあるソースコードはメンテナンスしていません。  
+EIPはメンテナンスを会社のアカウントに移行しました。
+
+Source Codes in this repository is not maintainanced.
+A repository that was here has moved into my company's repository.
+
+[https://github.com/pxgrid/jquery.eip](https://github.com/pxgrid/jquery.eip)
